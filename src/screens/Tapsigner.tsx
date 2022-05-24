@@ -12,7 +12,7 @@ const Tapsigner = () => {
   return (
     <>
       <Image
-        source={require('../../tapsigner-mockup-oj.png')}
+        source={require('../../assets/tapsigner-mockup-oj.png')}
         style={{width: 571 / 1.5, height: 360 / 1.5}}
       />
       <StatusDetails status={status} />
