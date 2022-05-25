@@ -1,12 +1,23 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
+import React, { useRef, useState } from 'react';
 
-import React from 'react';
+import {CKTapCard} from 'coinkite-tap-protocol-js';
+import SatCommands from '../components/SatCommands';
+import StatusDetails from '../components/StatusDetails';
 
 const Satscard = () => {
+  const [status, setStatus] = useState();
+  const card = useRef(new CKTapCard()).current;
+
   return (
-    <View>
-      <Text>Satscard</Text>
-    </View>
+    <>
+      <Image
+        source={require('../../satscard-front.png')}
+        style={{width: 571 / 1.5, height: 360 / 1.5}}
+      />
+      <StatusDetails status={status} />
+      <SatCommands setStatus={setStatus} card={card} />
+    </>
   );
 };
 

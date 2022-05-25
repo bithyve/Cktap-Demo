@@ -24,7 +24,7 @@ const COMMANDS = [
   'wait',
   'reload',
 ];
-const Commands = ({setStatus, card}: any) => {
+const TapCommands = ({setStatus, card}: any) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -165,7 +165,7 @@ console.log(data);
   );
 };
 
-export default Commands;
+export default TapCommands;
 
 const styles = StyleSheet.create({
   container: {

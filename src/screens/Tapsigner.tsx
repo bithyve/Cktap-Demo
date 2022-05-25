@@ -1,7 +1,7 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 
 import {CKTapCard} from 'coinkite-tap-protocol-js';
-import Commands from '../components/Commands';
+import Commands from '../components/TapCommands';
 import {Image} from 'react-native';
 import StatusDetails from '../components/StatusDetails';
 
