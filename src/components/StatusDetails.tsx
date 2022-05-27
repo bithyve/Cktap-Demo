@@ -1,6 +1,7 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import React from 'react';
+import QRCode from './QRCode';
 
 const { width } = Dimensions.get('window');
 
@@ -18,7 +19,15 @@ const ObjectRepr = ({ obj }: any) => {
           <ObjectRepr obj={obj[key]} />
         ) : (
           <Text style={styles.mainText}>{`${obj[key]}\n`}</Text>
-        )}
+          )}
+            <View>
+              <QRCode 
+                value={key}
+                title='Scan QR for address'
+              />
+            </View>
+          :
+            null
       </Text>
     );
   });
