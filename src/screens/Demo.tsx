@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
 
 import Header from '../components/Header';
 import Satscard from './Satscard';
@@ -14,7 +14,8 @@ const Demo = () => {
       <Header isTapsigner={isTapsigner} setTapsigner={setTapsigner} />
       <ScrollView
         contentContainerStyle={styles.main}
-        keyboardShouldPersistTaps={'always'}>
+        keyboardShouldPersistTaps={'always'}
+      >
         {isTapsigner ? <Tapsigner /> : <Satscard />}
       </ScrollView>
     </SafeAreaView>

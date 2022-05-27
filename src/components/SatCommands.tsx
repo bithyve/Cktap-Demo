@@ -13,9 +13,9 @@ const COMMANDS = [
   'check-status',
   'verify-certs',
   'slot-usage',
-  'unseal-slot',
-  'address',
   'setup-slot',
+  'address',
+  'unseal-slot',
   'get-privkey',
   'sign',
   'change-cvc',
@@ -46,7 +46,7 @@ const SatCommands = ({ setStatus, card }: any) => {
   };
 
   useEffect(() => {
-    if (!visible && inputs.size) {
+    if (!visible && (inputs.size || callback === 'address')) {
       switch (callback) {
         case 'setup-slot':
           card.setup(inputs.get('cvc'), null, true).then(display);

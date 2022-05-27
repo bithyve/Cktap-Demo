@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 import InputBox from './InputBox';
 
@@ -24,7 +24,7 @@ const COMMANDS = [
   'wait',
   'reload',
 ];
-const TapCommands = ({setStatus, card}: any) => {
+const TapCommands = ({ setStatus, card }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -42,9 +42,9 @@ const TapCommands = ({setStatus, card}: any) => {
   };
 
   const display = (data) => {
-console.log(data);
+    console.log(data);
     setStatus(data);
-  }
+  };
 
   useEffect(() => {
     if (!visible && inputs.size) {
@@ -190,10 +190,10 @@ const styles = StyleSheet.create({
     elevation: 6,
     shadowOpacity: 0.8,
     shadowRadius: 15,
-    shadowOffset: {width: 1, height: 3},
+    shadowOffset: { width: 1, height: 3 },
     padding: 8,
     borderRadius: 10,
     margin: 5,
   },
-  text: {color: 'black'},
+  text: { color: 'black' },
 });
