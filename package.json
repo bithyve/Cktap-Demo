@@ -11,7 +11,6 @@
     "postinstall": "rn-nodeify --install fs,dgram,process,path,console,crypto --hack"
   },
   "dependencies": {
-    "cbor-rn-prereqs": "^8.1.0",
     "coinkite-tap-protocol-js": "/Users/apple/Tests/coinkite-tap-protocol-js",
     "console-browserify": "^1.2.0",
     "path-browserify": "0.0.0",
