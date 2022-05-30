@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'rgba(255,255,255,1)',
     elevation: 6,
-    shadowOpacity: 0.8,
-    shadowRadius: 15,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
     shadowOffset: { width: 1, height: 3 },
     padding: 8,
     borderRadius: 10,

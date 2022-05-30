@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 
-import {CKTapCard} from 'coinkite-tap-protocol-js';
-import Commands from '../components/TapCommands';
-import {Image} from 'react-native';
+import { CKTapCard } from 'coinkite-tap-protocol-js';
+import { Image } from 'react-native';
 import StatusDetails from '../components/StatusDetails';
+import TapCommands from '../components/TapCommands';
 
 const Tapsigner = () => {
   const [status, setStatus] = useState();
@@ -13,10 +13,10 @@ const Tapsigner = () => {
     <>
       <Image
         source={require('../../tapsigner-mockup-oj.png')}
-        style={{width: 571 / 1.5, height: 360 / 1.5}}
+        style={{ width: 571 / 1.5, height: 360 / 1.5 }}
       />
       <StatusDetails status={status} />
-      <Commands setStatus={setStatus} card={card} />
+      <TapCommands setStatus={setStatus} card={card} />
     </>
   );
 };
