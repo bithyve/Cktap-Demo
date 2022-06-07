@@ -8,6 +8,7 @@ import {
 import React, { useEffect } from 'react';
 
 import InputBox from './InputBox';
+import nfcManager from 'react-native-nfc-manager';
 
 const COMMANDS = [
   'check-status',
@@ -30,9 +31,8 @@ const SatCommands = ({ setStatus, card }: any) => {
   const [callback, setCallback] = React.useState<string>();
 
   useEffect(() => {
-    card.initialise().then((res: any) => {
-      setStatus(card);
-    });
+    const init = async () => card.first_look();
+    card.nfcWrapper(init).then(setStatus);
   }, []);
 
   const cleanup = () => {
@@ -49,45 +49,61 @@ const SatCommands = ({ setStatus, card }: any) => {
     if (!visible && (inputs.size || callback === 'address')) {
       switch (callback) {
         case 'setup-slot':
-          card.setup(inputs.get('cvc'), null, true).then(display);
+          card
+            .nfcWrapper(() => card.setup(inputs.get('cvc'), null, true))
+            .then(display);
           cleanup();
           break;
         case 'sign':
           card
-            .sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
+            .nfcWrapper(() =>
+              card.sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
+            )
             .then(display);
           cleanup();
           break;
         case 'change-cvc':
           card
-            .change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+            .nfcWrapper(() =>
+              card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+            )
             .then(display);
           cleanup();
           break;
         case 'verify-cvc':
-          card.read(inputs.get('cvc')).then(display);
+          card.nfcWrapper(() => card.read(inputs.get('cvc'))).then(display);
           cleanup();
           break;
         case 'slot-usage':
           card
-            .get_slot_usage(inputs.get('slot'), inputs.get('cvc'))
+            .nfcWrapper(() =>
+              card.get_slot_usage(inputs.get('slot'), inputs.get('cvc'))
+            )
             .then(display);
           cleanup();
           break;
         case 'unseal-slot':
-          card.unseal_slot(inputs.get('cvc')).then(display);
+          card
+            .nfcWrapper(() => card.unseal_slot(inputs.get('cvc')))
+            .then(display);
           cleanup();
           break;
         case 'get-privkey':
-          card.get_privkey(inputs.get('cvc'), inputs.get('slot')).then(display);
+          card
+            .nfcWrapper(() =>
+              card.get_privkey(inputs.get('cvc'), inputs.get('slot'))
+            )
+            .then(display);
           cleanup();
           break;
         case 'address':
           card
-            .address(
-              inputs.get('faster'),
-              inputs.get('includePubkey'),
-              inputs.get('slot')
+            .nfcWrapper(() =>
+              card.address(
+                inputs.get('faster'),
+                inputs.get('includePubkey'),
+                inputs.get('slot')
+              )
             )
             .then(display);
           cleanup();
@@ -107,10 +123,10 @@ const SatCommands = ({ setStatus, card }: any) => {
   const onPress = (name: string) => {
     switch (name) {
       case 'check-status':
-        card.first_look().then(display);
+        card.nfcWrapper(() => card.first_look()).then(display);
         break;
       case 'verify-certs':
-        card.certificate_check().then(display);
+        card.nfcWrapper(() => card.certificate_check()).then(display);
         break;
       case 'slot-usage':
         getInputs('slot-usage', ['slot', 'cvc']);
@@ -134,7 +150,7 @@ const SatCommands = ({ setStatus, card }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        card.wait().then(display);
+        card.nfcWrapper(() => card.wait()).then(display);
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);

@@ -7,14 +7,17 @@ import {
 } from 'react-native';
 
 import React from 'react';
+import nfcManager from 'react-native-nfc-manager';
 
-const {width} = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 
-const Header = ({isTapsigner, setTapsigner}: any) => {
-  const activateTapsigner = () => {
+const Header = ({ isTapsigner, setTapsigner }: any) => {
+  const activateTapsigner = async () => {
+    await nfcManager.cancelTechnologyRequest();
     setTapsigner(true);
   };
-  const activateSatscard = () => {
+  const activateSatscard = async () => {
+    await nfcManager.cancelTechnologyRequest();
     setTapsigner(false);
   };
   const tapStyles = [styles.text, isTapsigner ? {} : styles.disabled];

@@ -11,7 +11,7 @@
     "postinstall": "rn-nodeify --install fs,dgram,process,path,console,crypto --hack"
   },
   "dependencies": {
-    "coinkite-tap-protocol-js": "/Users/apple/Tests/coinkite-tap-protocol-js",
+    "coinkite-tap-protocol-js": "git+https://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:x-oauth-basic@github.com/bithyve/coinkite-tap-protocol-js.git#main",
     "console-browserify": "^1.2.0",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",

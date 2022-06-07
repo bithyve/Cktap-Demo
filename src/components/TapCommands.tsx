@@ -31,9 +31,8 @@ const TapCommands = ({ setStatus, card }: any) => {
   const [callback, setCallback] = React.useState<string>();
 
   useEffect(() => {
-    card.initialise().then((res: any) => {
-      setStatus(card);
-    });
+    const init = async () => card.first_look();
+    card.nfcWrapper(init).then(setStatus);
   }, []);
 
   const cleanup = () => {
@@ -50,41 +49,53 @@ const TapCommands = ({ setStatus, card }: any) => {
     if (!visible && inputs.size) {
       switch (callback) {
         case 'pick-secret':
-          card.setup(inputs.get('cvc'), null, true).then(display);
+          card
+            .nfcWrapper(() => card.setup(inputs.get('cvc'), null, true))
+            .then(display);
           cleanup();
           break;
         case 'set-derivation':
           card
-            .set_derivation(inputs.get('path'), inputs.get('cvc'))
+            .nfcWrapper(() =>
+              card.set_derivation(inputs.get('path'), inputs.get('cvc'))
+            )
             .then(display);
           cleanup();
           break;
         case 'master-xpub':
-          card.get_xfp(inputs.get('cvc')).then(display);
+          card.nfcWrapper(() => card.get_xfp(inputs.get('cvc'))).then(display);
           cleanup();
           break;
         case 'xpub':
-          card.get_xpub(inputs.get('cvc'), false).then(display);
+          card
+            .nfcWrapper(() => card.get_xpub(inputs.get('cvc'), false))
+            .then(display);
           cleanup();
           break;
         case 'sign':
           card
-            .sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
+            .nfcWrapper(() =>
+              card.sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
+            )
             .then(display);
           cleanup();
           break;
         case 'create-backup':
-          card.make_backup(inputs.get('cvc')).then(display);
+          card
+            .nfcWrapper(() => card.make_backup(inputs.get('cvc')))
+            .then(display);
           cleanup();
           break;
         case 'change-cvc':
           card
-            .change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+            .nfcWrapper(() =>
+              card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+            )
             .then(display);
           cleanup();
           break;
         case 'verify-cvc':
-          card.read(inputs.get('cvc')).then(display);
+          card.nfcWrapper(() => card.read(inputs.get('cvc'))).then(display);
           cleanup();
           break;
         default:
@@ -102,16 +113,16 @@ const TapCommands = ({ setStatus, card }: any) => {
   const onPress = (name: string) => {
     switch (name) {
       case 'check-status':
-        card.first_look().then(display);
+        card.nfcWrapper(() => card.first_look()).then(display);
         break;
       case 'verify-certs':
-        card.certificate_check().then(display);
+        card.nfcWrapper(() => card.certificate_check()).then(display);
         break;
       case 'pick-secret':
         getInputs('pick-secret', ['cvc']);
         break;
       case 'get-derivation':
-        card.get_derivation().then(display);
+        card.nfcWrapper(() => card.get_derivation()).then(display);
         break;
       case 'set-derivation':
         getInputs('set-derivation', ['path', 'cvc']);
@@ -132,7 +143,7 @@ const TapCommands = ({ setStatus, card }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        card.wait().then(display);
+        card.nfcWrapper(() => card.wait()).then(display);
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
