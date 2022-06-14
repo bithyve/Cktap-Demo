@@ -6,7 +6,7 @@ import Satscard from './Satscard';
 import Tapsigner from './Tapsigner';
 
 const Demo = () => {
-  const [isTapsigner, setTapsigner] = useState(false);
+  const [isTapsigner, setTapsigner] = useState(true);
 
   return (
     <SafeAreaView style={styles.alignCenter}>

@@ -10,7 +10,7 @@ import {
 
 import React from 'react';
 
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 
 const InputBox = ({
   visible,
@@ -36,22 +36,25 @@ const InputBox = ({
       visible={visible}
       onRequestClose={() => {
         setVisible(false);
-      }}>
+      }}
+    >
       <TouchableOpacity
         activeOpacity={1}
         style={styles.main}
         onPress={() => {
           setVisible(false);
-        }}>
+        }}
+      >
         <View style={styles.centeredView}>
-          {items.map(item => {
+          {items.map((item) => {
             return (
               <TextInput
+                autoFocus
                 key={item}
                 style={styles.input}
                 placeholder={item}
                 placeholderTextColor={'#ddd'}
-                onChangeText={value => {
+                onChangeText={(value) => {
                   const updated = inputs.set(item, value);
                   setInputs(updated);
                 }}

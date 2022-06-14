@@ -1,92 +1,106 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
-  Dimensions,
+  Animated,
+  Easing,
   Image,
   Modal,
+  Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 import React from 'react';
 
-const {height, width} = Dimensions.get('screen');
+function NfcPrompt({ visible }: { visible: boolean }) {
+  console.log('render', visible);
+  if (Platform.OS === 'ios') {
+    return null;
+  }
+  const animation = React.useRef(new Animated.Value(0)).current;
+  const [_visible, setVisible] = React.useState(visible);
 
-const NfcPrompt = ({show, setShow}: {show: boolean; setShow: any}) => {
+  const open = () => {
+    setVisible(true);
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.elastic(0.8),
+    }).start();
+  };
+  const close = () => {
+    Animated.timing(animation, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.elastic(0.8),
+    }).start(() => setVisible(false));
+  };
+  React.useEffect(() => {
+    visible ? open() : close();
+  }, [visible]);
+
+  const bgAnimStyle = {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    opacity: animation,
+  };
+  const promptAnimStyle = {
+    transform: [
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [300, 0],
+        }),
+      },
+    ],
+  };
+
   return (
-    <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={show}
-        onRequestClose={() => {
-          setShow(false);
-        }}>
-        <TouchableOpacity
-          style={styles.centeredView}
-          activeOpacity={1}
-          onPress={() => {
-            setShow(false);
-          }}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Scanning</Text>
+    <Modal transparent={true} visible={_visible}>
+      <View style={[styles.wrapper]}>
+        <View style={{ flex: 1 }} />
+        <Animated.View style={[styles.prompt, promptAnimStyle]}>
+          <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          >
             <Image
-              source={require('../../nfc-payment.png')}
-              style={styles.nfc}
+              source={require('../../nfc-512.png')}
+              style={{ width: 120, height: 120, padding: 20 }}
+              resizeMode="contain"
             />
+            <Text>{'NFC scanning'}</Text>
           </View>
-        </TouchableOpacity>
-      </Modal>
-    </>
+        </Animated.View>
+        <Animated.View style={[styles.promptBg, bgAnimStyle]} />
+      </View>
+    </Modal>
   );
-};
-
-export default NfcPrompt;
+}
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
+  wrapper: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
     alignItems: 'center',
-    marginTop: 22,
-    backgroundColor: 'rgba(0,0,0,.5)',
   },
-  modalView: {
-    height: height * 0.5,
-    width,
-    backgroundColor: 'rgba(240,240,240,1)',
+  promptBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
+  },
+  prompt: {
+    height: 300,
+    alignSelf: 'stretch',
+    padding: 20,
+    backgroundColor: 'white',
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    margin: 20,
+    zIndex: 2,
   },
-  button: {
-    borderRadius: 5,
-    padding: 10,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: 'black',
-  },
-  nfc: {height: 200, width: 200},
 });
+
+export default NfcPrompt;
