@@ -12,7 +12,6 @@ import {
 import React from 'react';
 
 function NfcPrompt({ visible }: { visible: boolean }) {
-  console.log('render', visible);
   if (Platform.OS === 'ios') {
     return null;
   }
