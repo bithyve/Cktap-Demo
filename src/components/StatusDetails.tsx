@@ -1,11 +1,11 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
+import QRCode from 'react-native-qrcode-svg';
 import React from 'react';
 
 const { width } = Dimensions.get('window');
 
 const ignoreKeys = ['card_nonce', 'card_pubkey', 'pubkey'];
-
 const ObjectRepr = ({ obj }: any) => {
   return Object.keys(obj).map((key: string) => {
     if (ignoreKeys.includes(key)) {
@@ -17,7 +17,12 @@ const ObjectRepr = ({ obj }: any) => {
         {typeof obj[key] === 'object' && obj[key] !== null ? (
           <ObjectRepr obj={obj[key]} />
         ) : (
-          <Text style={styles.mainText}>{`${obj[key]}\n`}</Text>
+          <>
+            <Text style={styles.mainText} selectable>{`${obj[key]}\n`}</Text>
+            {['addr', 'address'].includes(key) ? (
+              <QRCode value={obj[key]} />
+            ) : null}
+          </>
         )}
       </Text>
     );
