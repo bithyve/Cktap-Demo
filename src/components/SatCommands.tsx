@@ -18,7 +18,6 @@ const COMMANDS = [
   'address',
   'unseal-slot',
   'get-privkey',
-  'sign',
   'change-cvc',
   'verify-cvc',
   'wait',
