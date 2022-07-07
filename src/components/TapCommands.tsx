@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 
 import InputBox from './InputBox';
 import NfcPrompt from './NfcPromptAndroid';
+import { createHash } from 'crypto';
 
 const COMMANDS = [
   'check-status',
@@ -74,7 +75,13 @@ const TapCommands = ({ setStatus, card }: any) => {
         case 'sign':
           withModal(() =>
             card
-              .sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
+              .sign_digest(
+                inputs.get('cvc'),
+                0,
+                Buffer.from(
+                  createHash('sha256').update(inputs.get('digest')).digest()
+                )
+              )
               .then(setStatus)
           );
           cleanup();
