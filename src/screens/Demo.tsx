@@ -14,9 +14,8 @@ const Demo = () => {
       <Header isTapsigner={isTapsigner} setTapsigner={setTapsigner} />
       <ScrollView
         contentContainerStyle={styles.main}
-        keyboardShouldPersistTaps={'always'}
-      >
-        {isTapsigner ? <Tapsigner /> : <Satscard />}
+        keyboardShouldPersistTaps={'always'}>
+        <>{isTapsigner ? <Tapsigner /> : <Satscard />}</>
       </ScrollView>
     </SafeAreaView>
   );
@@ -30,7 +29,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    paddingVertical: 20,
   },
   main: {
     flex: 1,

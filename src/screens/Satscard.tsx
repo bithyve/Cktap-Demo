@@ -1,7 +1,7 @@
-import {Image, StyleSheet} from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import React, { useRef, useState } from 'react';
 
-import {CKTapCard} from 'coinkite-tap-protocol-js';
+import { CKTapCard } from 'coinkite-tap-protocol-js';
 import SatCommands from '../components/SatCommands';
 import StatusDetails from '../components/StatusDetails';
 
@@ -12,8 +12,8 @@ const Satscard = () => {
   return (
     <>
       <Image
-        source={require('../../satscard-front.png')}
-        style={{width: 571 / 1.5, height: 360 / 1.5}}
+        source={require('../assets/satscard-front.png')}
+        style={{ width: 571 / 1.5, height: 360 / 1.5 }}
       />
       <StatusDetails status={status} />
       <SatCommands setStatus={setStatus} card={card} />

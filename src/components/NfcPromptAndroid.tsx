@@ -60,12 +60,11 @@ function NfcPrompt({ visible }: { visible: boolean }) {
         <View style={{ flex: 1 }} />
         <Animated.View style={[styles.prompt, promptAnimStyle]}>
           <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-          >
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Image
-              source={require('../../nfc-512.png')}
+              source={require('../assets/nfc-512.png')}
               style={{ width: 120, height: 120, padding: 20 }}
-              resizeMode="contain"
+              resizeMode='contain'
             />
             <Text>{'NFC scanning'}</Text>
           </View>
