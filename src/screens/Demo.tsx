@@ -11,7 +11,6 @@ import { CKTapCard } from 'coinkite-tap-protocol-js';
 import Card from '../components/Card';
 import InitiateCard from '../components/InitiateCard';
 import NfcPrompt from '../components/NfcPromptAndroid';
-import StatusDetails from '../components/StatusDetails';
 import { _setStatus } from '../utils.ts/commandUtils';
 import { useTheme } from '@react-navigation/native';
 
@@ -65,9 +64,9 @@ const Demo = () => {
             />
           ) : (
             <View style={styles.container}>
-              <StatusDetails status={status} />
               <Card
                 card={card}
+                status={status}
                 isTapsigner={isTapsigner}
                 withModal={withModal}
               />

@@ -5,8 +5,9 @@ import React from 'react';
 const InitiateCard = ({ withModal, card, setTapsigner }: any) => {
   const initiate = () =>
     withModal(async () => {
-      await card.first_look();
-      setTapsigner(card.is_tapsigner);
+      const selectedCard = await card.first_look();
+      setTapsigner(selectedCard.is_tapsigner);
+      return selectedCard;
     });
   return (
     <TouchableOpacity onPress={initiate} style={styles.container}>
