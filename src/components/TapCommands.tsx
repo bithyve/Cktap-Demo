@@ -1,12 +1,7 @@
-import {
-  DevSettings,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { AppContext } from '../contexts/AppContext';
 import InputBox from './InputBox';
 import { createHash } from 'crypto';
 
@@ -30,69 +25,74 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
   const [callback, setCallback] = React.useState<string>();
+  const { cvc, setCvc } = useContext(AppContext);
 
   const cleanup = () => {
     setInputs(new Map());
     setCallback('');
   };
 
-  useEffect(() => {
-    if (!visible && inputs.size) {
-      switch (callback) {
-        case 'pick-secret':
-          withModal(() => card.setup(inputs.get('cvc'), null, true));
-          cleanup();
-          break;
-        case 'set-derivation':
-          withModal(() =>
-            card.set_derivation(inputs.get('path'), inputs.get('cvc'))
-          );
-          cleanup();
-          break;
-        case 'master-xpub':
-          withModal(() => card.get_xfp(inputs.get('cvc')));
-          cleanup();
-          break;
-        case 'xpub':
-          withModal(() => card.get_xpub(inputs.get('cvc'), false));
-          cleanup();
-          break;
-        case 'sign':
-          withModal(() =>
-            card.sign_digest(
-              inputs.get('cvc'),
-              0,
-              Buffer.from(
-                createHash('sha256').update(inputs.get('digest')).digest()
-              )
+  const interact = (cmd = '') => {
+    switch (cmd ? cmd : callback) {
+      case 'pick-secret':
+        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true));
+        cleanup();
+        break;
+      case 'set-derivation':
+        withModal(() =>
+          card.set_derivation(inputs.get('path'), inputs.get('cvc') || cvc)
+        );
+        cleanup();
+        break;
+      case 'master-xpub':
+        withModal(() => card.get_xfp(inputs.get('cvc') || cvc));
+        cleanup();
+        break;
+      case 'xpub':
+        withModal(() => card.get_xpub(inputs.get('cvc') || cvc, false));
+        cleanup();
+        break;
+      case 'sign':
+        withModal(() =>
+          card.sign_digest(
+            inputs.get('cvc') || cvc,
+            0,
+            Buffer.from(
+              createHash('sha256').update(inputs.get('digest')).digest()
             )
-          );
-          cleanup();
-          break;
-        case 'create-backup':
-          withModal(() => card.make_backup(inputs.get('cvc')));
-          cleanup();
-          break;
-        case 'change-cvc':
-          withModal(() =>
-            card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
-          );
-          cleanup();
-          break;
-        case 'verify-cvc':
-          withModal(() => card.read(inputs.get('cvc')));
-          cleanup();
-          break;
-        default:
-          break;
-      }
+          )
+        );
+        cleanup();
+        break;
+      case 'create-backup':
+        withModal(() => card.make_backup(inputs.get('cvc') || cvc));
+        cleanup();
+        break;
+      case 'change-cvc':
+        withModal(() =>
+          card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+        );
+        cleanup();
+        break;
+      case 'verify-cvc':
+        withModal(() => card.read(inputs.get('cvc') || cvc));
+        cleanup();
+        break;
+      default:
+        break;
     }
-  }, [visible]);
+  };
 
   const getInputs = (name: string, ins: string[]) => {
     setCallback(name);
-    setValues(ins);
-    setVisible(true);
+    ins = ins.filter(input => !(input === 'cvc' && cvc));
+    if (!ins.length) {
+      // passing name here as setCallback is async
+      interact(name);
+    } else {
+      setValues(ins);
+      setVisible(true);
+    }
   };
 
   const onPress = (name: string) => {
@@ -134,6 +134,7 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
         getInputs('verify-cvc', ['cvc']);
         break;
       case 'Start Over':
+        setCvc('');
         startOver();
         break;
       default:
@@ -156,6 +157,7 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
         items={values}
         setInputs={setInputs}
         setVisible={setVisible}
+        interact={interact}
       />
     </View>
   );

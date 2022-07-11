@@ -1,12 +1,7 @@
-import {
-  DevSettings,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { AppContext } from '../contexts/AppContext';
 import InputBox from './InputBox';
 
 const COMMANDS = [
@@ -27,71 +22,76 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
   const [callback, setCallback] = React.useState<string>();
+  const { cvc, setCvc } = useContext(AppContext);
 
   const cleanup = () => {
     setInputs(new Map());
     setCallback(undefined);
   };
 
-  useEffect(() => {
-    if (!visible && (inputs.size || callback === 'address')) {
-      switch (callback) {
-        case 'setup-slot':
-          withModal(() => card.setup(inputs.get('cvc'), null, true));
-          cleanup();
-          break;
-        case 'sign':
-          withModal(() =>
-            card.sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
-          );
-          cleanup();
-          break;
-        case 'change-cvc':
-          withModal(() =>
-            card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
-          );
-          cleanup();
-          break;
-        case 'verify-cvc':
-          withModal(() => card.read(inputs.get('cvc')));
-          cleanup();
-          break;
-        case 'slot-usage':
-          withModal(() =>
-            card.get_slot_usage(inputs.get('slot'), inputs.get('cvc'))
-          );
-          cleanup();
-          break;
-        case 'unseal-slot':
-          withModal(() => card.unseal_slot(inputs.get('cvc')));
-          cleanup();
-          break;
-        case 'get-privkey':
-          withModal(() =>
-            card.get_privkey(inputs.get('cvc'), inputs.get('slot'))
-          );
-          cleanup();
-          break;
-        case 'address':
-          withModal(() =>
-            card.address(
-              inputs.get('faster'),
-              inputs.get('includePubkey'),
-              inputs.get('slot')
-            )
-          );
-          cleanup();
-          break;
-        default:
-          break;
-      }
+  const interact = (cmd = '') => {
+    switch (cmd ? cmd : callback) {
+      case 'setup-slot':
+        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true));
+        cleanup();
+        break;
+      case 'sign':
+        withModal(() =>
+          card.sign_digest(inputs.get('cvc') || cvc, 0, inputs.get('digest'))
+        );
+        cleanup();
+        break;
+      case 'change-cvc':
+        withModal(() =>
+          card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+        );
+        cleanup();
+        break;
+      case 'verify-cvc':
+        withModal(() => card.read(inputs.get('cvc') || cvc));
+        cleanup();
+        break;
+      case 'slot-usage':
+        withModal(() =>
+          card.get_slot_usage(inputs.get('slot'), inputs.get('cvc') || cvc)
+        );
+        cleanup();
+        break;
+      case 'unseal-slot':
+        withModal(() => card.unseal_slot(inputs.get('cvc') || cvc));
+        cleanup();
+        break;
+      case 'get-privkey':
+        withModal(() =>
+          card.get_privkey(inputs.get('cvc') || cvc, inputs.get('slot'))
+        );
+        cleanup();
+        break;
+      case 'address':
+        withModal(() =>
+          card.address(
+            inputs.get('faster'),
+            inputs.get('includePubkey'),
+            inputs.get('slot')
+          )
+        );
+        cleanup();
+        break;
+      default:
+        break;
     }
-  }, [visible]);
+  };
 
   const getInputs = (name: string, ins: string[]) => {
     setCallback(name);
-    setValues(ins);
-    setVisible(true);
+    ins = ins.filter(input => !(input === 'cvc' && cvc));
+    if (!ins.length) {
+      // passing name here as setCallback is async
+      interact(name);
+    } else {
+      setValues(ins);
+      setVisible(true);
+    }
   };
 
   const onPress = (name: string) => {
@@ -130,6 +130,7 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         getInputs('verify-cvc', ['cvc']);
         break;
       case 'Start Over':
+        setCvc('');
         startOver();
         break;
       default:
@@ -152,6 +153,7 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         items={values}
         setInputs={setInputs}
         setVisible={setVisible}
+        interact={interact}
       />
     </View>
   );

@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import React, { useContext } from 'react';
 
-import React from 'react';
+import { AppContext } from '../contexts/AppContext';
 
 const { height, width } = Dimensions.get('screen');
 
@@ -18,35 +19,35 @@ const InputBox = ({
   items,
   inputs,
   setInputs,
+  interact,
 }: {
   visible: boolean;
   setVisible: any;
   items: string[];
   inputs: Map<any, any>;
   setInputs: any;
+  interact: any;
 }) => {
-  const done = () => {
+  const { setCvc } = useContext(AppContext);
+
+  const close = () => {
     setVisible(false);
+  };
+
+  const done = () => {
+    close();
+    interact();
   };
 
   return (
     <Modal
-      animationType="slide"
+      animationType='slide'
       transparent={true}
       visible={visible}
-      onRequestClose={() => {
-        setVisible(false);
-      }}
-    >
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.main}
-        onPress={() => {
-          setVisible(false);
-        }}
-      >
+      onRequestClose={close}>
+      <TouchableOpacity activeOpacity={1} style={styles.main} onPress={close}>
         <View style={styles.centeredView}>
-          {items.map((item) => {
+          {items.map(item => {
             return (
               <TextInput
                 autoFocus
@@ -54,10 +55,14 @@ const InputBox = ({
                 style={styles.input}
                 placeholder={item}
                 placeholderTextColor={'#ddd'}
-                onChangeText={(value) => {
+                onChangeText={value => {
                   const updated = inputs.set(item, value);
                   setInputs(updated);
+                  if (item === 'cvc') {
+                    setCvc(value);
+                  }
                 }}
+                keyboardType={['cvc'].includes(item) ? 'numeric' : 'default'}
               />
             );
           })}
