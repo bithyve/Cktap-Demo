@@ -28,21 +28,31 @@ const ObjectRepr = ({ obj }: any) => {
     );
   });
 };
-const StatusDetails = ({ status }: any) => {
+const StatusDetails = ({
+  status,
+}: {
+  status: { type: string; command: string; error: any; response: any };
+}) => {
   if (!status) {
+    return null;
+  }
+  const { type = '', command = '', error = null, response = null } = status;
+  if (error) {
+    return <Text selectable style={[styles.mainText]}>{`${error}`}</Text>;
+  }
+  if (!response) {
     return null;
   }
 
   return (
     <View style={styles.shadow}>
-      {typeof status !== 'object' ? (
+      {typeof response !== 'object' ? (
         <Text
           numberOfLines={2}
           selectable
-          style={[styles.mainText]}
-        >{`${status}`}</Text>
+          style={[styles.mainText]}>{`${response}`}</Text>
       ) : (
-        <ObjectRepr obj={status} />
+        <ObjectRepr obj={response} />
       )}
     </View>
   );

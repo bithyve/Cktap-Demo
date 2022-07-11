@@ -8,7 +8,6 @@ import {
 import React, { useEffect } from 'react';
 
 import InputBox from './InputBox';
-import NfcPrompt from './NfcPromptAndroid';
 
 const COMMANDS = [
   'check-status',
@@ -23,19 +22,11 @@ const COMMANDS = [
   'wait',
   'reload',
 ];
-const SatCommands = ({ setStatus, card }: any) => {
+const SatCommands = ({ withModal, card }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
   const [callback, setCallback] = React.useState<string>();
-  const [prompt, setPrompt] = React.useState<boolean>(false);
-
-  const withModal = async (callback: any) => {
-    setPrompt(true);
-    const resp = await card.nfcWrapper(callback);
-    setPrompt(false);
-    return resp;
-  };
 
   const cleanup = () => {
     setInputs(new Map());
@@ -46,41 +37,39 @@ const SatCommands = ({ setStatus, card }: any) => {
     if (!visible && (inputs.size || callback === 'address')) {
       switch (callback) {
         case 'setup-slot':
-          withModal(() => card.setup(inputs.get('cvc'), null, true)).then(
-            setStatus
-          );
+          withModal(() => card.setup(inputs.get('cvc'), null, true));
           cleanup();
           break;
         case 'sign':
           withModal(() =>
             card.sign_digest(inputs.get('cvc'), 0, inputs.get('digest'))
-          ).then(setStatus);
+          );
           cleanup();
           break;
         case 'change-cvc':
           withModal(() =>
             card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
-          ).then(setStatus);
+          );
           cleanup();
           break;
         case 'verify-cvc':
-          withModal(() => card.read(inputs.get('cvc'))).then(setStatus);
+          withModal(() => card.read(inputs.get('cvc')));
           cleanup();
           break;
         case 'slot-usage':
           withModal(() =>
             card.get_slot_usage(inputs.get('slot'), inputs.get('cvc'))
-          ).then(setStatus);
+          );
           cleanup();
           break;
         case 'unseal-slot':
-          withModal(() => card.unseal_slot(inputs.get('cvc'))).then(setStatus);
+          withModal(() => card.unseal_slot(inputs.get('cvc')));
           cleanup();
           break;
         case 'get-privkey':
           withModal(() =>
             card.get_privkey(inputs.get('cvc'), inputs.get('slot'))
-          ).then(setStatus);
+          );
           cleanup();
           break;
         case 'address':
@@ -90,7 +79,7 @@ const SatCommands = ({ setStatus, card }: any) => {
               inputs.get('includePubkey'),
               inputs.get('slot')
             )
-          ).then(setStatus);
+          );
           cleanup();
           break;
         default:
@@ -108,10 +97,10 @@ const SatCommands = ({ setStatus, card }: any) => {
   const onPress = (name: string) => {
     switch (name) {
       case 'check-status':
-        withModal(() => card.first_look()).then(setStatus);
+        withModal(() => card.first_look());
         break;
       case 'verify-certs':
-        withModal(() => card.certificate_check()).then(setStatus);
+        withModal(() => card.certificate_check());
         break;
       case 'slot-usage':
         getInputs('slot-usage', ['slot', 'cvc']);
@@ -135,7 +124,7 @@ const SatCommands = ({ setStatus, card }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        withModal(() => card.wait()).then(setStatus);
+        withModal(() => card.wait());
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
@@ -164,7 +153,6 @@ const SatCommands = ({ setStatus, card }: any) => {
         setInputs={setInputs}
         setVisible={setVisible}
       />
-      <NfcPrompt visible={prompt} />
     </View>
   );
 };
@@ -177,7 +165,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: 'rgba(255,255,255,1)',
   },
   alignCenter: {
     flex: 1,

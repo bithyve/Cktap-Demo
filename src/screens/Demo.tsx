@@ -1,36 +1,92 @@
-import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import React, { useRef, useState } from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 
-import Header from '../components/Header';
-import Satscard from './Satscard';
-import Tapsigner from './Tapsigner';
+import { CKTapCard } from 'coinkite-tap-protocol-js';
+import Card from '../components/Card';
+import InitiateCard from '../components/InitiateCard';
+import NfcPrompt from '../components/NfcPromptAndroid';
+import StatusDetails from '../components/StatusDetails';
+import { _setStatus } from '../utils.ts/commandUtils';
+import { useTheme } from '@react-navigation/native';
 
 const Demo = () => {
-  const [isTapsigner, setTapsigner] = useState(true);
+  const [isTapsigner, setTapsigner] = useState(null);
+  const [status, setStatus] = useState<any>();
+  const card = useRef(new CKTapCard()).current;
+  const [prompt, setPrompt] = React.useState<boolean>(false);
 
+  const withModal = async (callback: any) => {
+    try {
+      setPrompt(true);
+      const resp = await card.nfcWrapper(callback);
+      _setStatus(
+        resp,
+        callback,
+        false,
+        setStatus,
+        isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
+      );
+      setPrompt(false);
+      return resp;
+    } catch (error: any) {
+      setPrompt(false);
+      _setStatus(
+        error.toString(),
+        callback,
+        true,
+        setStatus,
+        isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
+      );
+    }
+  };
+
+  const theme = useTheme();
   return (
-    <SafeAreaView style={styles.alignCenter}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
-      <Header isTapsigner={isTapsigner} setTapsigner={setTapsigner} />
-      <ScrollView
-        contentContainerStyle={styles.main}
-        keyboardShouldPersistTaps={'always'}>
-        <>{isTapsigner ? <Tapsigner /> : <Satscard />}</>
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={theme.colors.background}
+      />
+      <SafeAreaView style={styles.flex}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps={'always'}>
+          {isTapsigner === null ? (
+            <InitiateCard
+              card={card}
+              withModal={withModal}
+              setTapsigner={setTapsigner}
+            />
+          ) : (
+            <View style={styles.container}>
+              <StatusDetails status={status} />
+              <Card
+                card={card}
+                isTapsigner={isTapsigner}
+                withModal={withModal}
+              />
+            </View>
+          )}
+        </ScrollView>
+        <NfcPrompt visible={prompt} />
+      </SafeAreaView>
+    </>
   );
 };
 
 export default Demo;
 
 const styles = StyleSheet.create({
-  alignCenter: {
+  flex: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
   },
-  main: {
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',

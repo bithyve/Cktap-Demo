@@ -8,7 +8,6 @@ import {
 import React, { useEffect } from 'react';
 
 import InputBox from './InputBox';
-import NfcPrompt from './NfcPromptAndroid';
 import { createHash } from 'crypto';
 
 const COMMANDS = [
@@ -26,19 +25,11 @@ const COMMANDS = [
   'wait',
   'reload',
 ];
-const TapCommands = ({ setStatus, card }: any) => {
+const TapCommands = ({ withModal, card }: any) => {
   const [visible, setVisible] = React.useState<boolean>(false);
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
   const [callback, setCallback] = React.useState<string>();
-  const [prompt, setPrompt] = React.useState<boolean>(false);
-
-  const withModal = async (callback: any) => {
-    setPrompt(true);
-    const resp = await card.nfcWrapper(callback);
-    setPrompt(false);
-    return resp;
-  };
 
   const cleanup = () => {
     setInputs(new Map());
@@ -49,57 +40,47 @@ const TapCommands = ({ setStatus, card }: any) => {
     if (!visible && inputs.size) {
       switch (callback) {
         case 'pick-secret':
-          withModal(() =>
-            card.setup(inputs.get('cvc'), null, true).then(setStatus)
-          );
+          withModal(() => card.setup(inputs.get('cvc'), null, true));
           cleanup();
           break;
         case 'set-derivation':
           withModal(() =>
-            card
-              .set_derivation(inputs.get('path'), inputs.get('cvc'))
-              .then(setStatus)
+            card.set_derivation(inputs.get('path'), inputs.get('cvc'))
           );
           cleanup();
           break;
         case 'master-xpub':
-          withModal(() => card.get_xfp(inputs.get('cvc')).then(setStatus));
+          withModal(() => card.get_xfp(inputs.get('cvc')));
           cleanup();
           break;
         case 'xpub':
-          withModal(() =>
-            card.get_xpub(inputs.get('cvc'), false).then(setStatus)
-          );
+          withModal(() => card.get_xpub(inputs.get('cvc'), false));
           cleanup();
           break;
         case 'sign':
           withModal(() =>
-            card
-              .sign_digest(
-                inputs.get('cvc'),
-                0,
-                Buffer.from(
-                  createHash('sha256').update(inputs.get('digest')).digest()
-                )
+            card.sign_digest(
+              inputs.get('cvc'),
+              0,
+              Buffer.from(
+                createHash('sha256').update(inputs.get('digest')).digest()
               )
-              .then(setStatus)
+            )
           );
           cleanup();
           break;
         case 'create-backup':
-          withModal(() => card.make_backup(inputs.get('cvc')).then(setStatus));
+          withModal(() => card.make_backup(inputs.get('cvc')));
           cleanup();
           break;
         case 'change-cvc':
           withModal(() =>
-            card
-              .change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
-              .then(setStatus)
+            card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
           );
           cleanup();
           break;
         case 'verify-cvc':
-          withModal(() => card.read(inputs.get('cvc')).then(setStatus));
+          withModal(() => card.read(inputs.get('cvc')));
           cleanup();
           break;
         default:
@@ -117,16 +98,16 @@ const TapCommands = ({ setStatus, card }: any) => {
   const onPress = (name: string) => {
     switch (name) {
       case 'check-status':
-        withModal(() => card.first_look()).then(setStatus);
+        withModal(() => card.first_look());
         break;
       case 'verify-certs':
-        withModal(() => card.certificate_check()).then(setStatus);
+        withModal(() => card.certificate_check());
         break;
       case 'pick-secret':
         getInputs('pick-secret', ['cvc']);
         break;
       case 'get-derivation':
-        withModal(() => card.get_derivation()).then(setStatus);
+        withModal(() => card.get_derivation());
         break;
       case 'set-derivation':
         getInputs('set-derivation', ['path', 'cvc']);
@@ -147,7 +128,7 @@ const TapCommands = ({ setStatus, card }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        withModal(() => card.wait()).then(setStatus);
+        withModal(() => card.wait());
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
@@ -176,7 +157,6 @@ const TapCommands = ({ setStatus, card }: any) => {
         setInputs={setInputs}
         setVisible={setVisible}
       />
-      <NfcPrompt visible={prompt} />
     </View>
   );
 };
@@ -189,7 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: 'rgba(255,255,255,1)',
   },
   alignCenter: {
     flex: 1,

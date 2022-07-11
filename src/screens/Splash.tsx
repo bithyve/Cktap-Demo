@@ -40,7 +40,7 @@ const Footer = () => {
   }, []);
   return (
     <Animated.Text style={[styles.footer, { opacity }]}>
-      Made by Hexa with Coinkite and ♥
+      Made by Hexa and ♥
     </Animated.Text>
   );
 };
@@ -48,7 +48,7 @@ const Footer = () => {
 const Landing = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={'transparent'} />
+      <StatusBar barStyle={'light-content'} backgroundColor={'#494949'} />
       <View>
         <Map style={styles.svg} />
       </View>
