@@ -23,9 +23,9 @@ const COMMANDS = [
   'change-cvc',
   'verify-cvc',
   'wait',
-  'reload',
+  'Start Over',
 ];
-const TapCommands = ({ withModal, card }: any) => {
+const TapCommands = ({ withModal, card, startOver }: any) => {
   const [visible, setVisible] = React.useState<boolean>(false);
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -133,8 +133,8 @@ const TapCommands = ({ withModal, card }: any) => {
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
         break;
-      case 'reload':
-        DevSettings.reload();
+      case 'Start Over':
+        startOver();
         break;
       default:
         break;

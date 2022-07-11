@@ -45,6 +45,10 @@ const Demo = () => {
     }
   };
 
+  const startOver = () => {
+    setTapsigner(null);
+  };
+
   const theme = useTheme();
   return (
     <>
@@ -69,6 +73,7 @@ const Demo = () => {
                 status={status}
                 isTapsigner={isTapsigner}
                 withModal={withModal}
+                startOver={startOver}
               />
             </View>
           )}

@@ -3,7 +3,7 @@ import React from 'react';
 import SatCommands from '../components/SatCommands';
 import StatusDetails from '../components/StatusDetails';
 
-const Satscard = ({ withModal, card, status }: any) => {
+const Satscard = ({ withModal, card, status, startOver }: any) => {
   return (
     <>
       <Image
@@ -11,7 +11,7 @@ const Satscard = ({ withModal, card, status }: any) => {
         style={{ width: 571 / 1.5, height: 360 / 1.5 }}
       />
       <StatusDetails status={status} />
-      <SatCommands withModal={withModal} card={card} status={status} />
+      <SatCommands withModal={withModal} card={card} startOver={startOver} />
     </>
   );
 };

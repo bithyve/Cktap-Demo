@@ -20,9 +20,9 @@ const COMMANDS = [
   'change-cvc',
   'verify-cvc',
   'wait',
-  'reload',
+  'Start Over',
 ];
-const SatCommands = ({ withModal, card }: any) => {
+const SatCommands = ({ withModal, card, startOver }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -129,8 +129,8 @@ const SatCommands = ({ withModal, card }: any) => {
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
         break;
-      case 'reload':
-        DevSettings.reload();
+      case 'Start Over':
+        startOver();
         break;
       default:
         break;
