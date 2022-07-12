@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -48,6 +48,19 @@ const Demo = () => {
   const startOver = () => {
     setTapsigner(null);
   };
+
+  // const initiate = () =>
+  //   withModal(async () => {
+  //     const selectedCard = await card.first_look();
+  //     setTapsigner(selectedCard.is_tapsigner);
+  //     return selectedCard;
+  //   });
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     initiate();
+  //   }, 1000);
+  // }, []);
 
   const theme = useTheme();
   return (

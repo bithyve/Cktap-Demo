@@ -2,6 +2,7 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 
 import { AppProvider } from './src/contexts/AppContext';
 import Demo from './src/screens/Demo';
+import Instructions from './src/screens/Instructions';
 import { LogBox } from 'react-native';
 import React from 'react';
 import Splash from './src/screens/Splash';
@@ -15,7 +16,8 @@ function App() {
       <NavigationContainer theme={DefaultTheme}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='Splash' component={Splash} />
-          <Stack.Screen name='Home' component={Demo} />
+          <Stack.Screen name='Instructions' component={Instructions} />
+          <Stack.Screen name='Demo' component={Demo} />
         </Stack.Navigator>
       </NavigationContainer>
     </AppProvider>
