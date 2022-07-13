@@ -103,16 +103,18 @@ const StatusDetails = ({
   } else if (['slot-usage'].includes(command)) {
     return (
       <View style={[styles.shadow, { maxHeight: '90%' }]}>
-        <QRCode value={response.address} size={100} />
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.textCopy}
-          onPress={() => Clipboard.setString(response.address)}>
-          <Text numberOfLines={1} style={styles.address}>
-            {response.address}
-          </Text>
-          <Copy />
-        </TouchableOpacity>
+        {response.address && <QRCode value={response.address} size={100} />}
+        {response.address && (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.textCopy}
+            onPress={() => Clipboard.setString(response.address)}>
+            <Text numberOfLines={1} style={styles.address}>
+              {response.address}
+            </Text>
+            <Copy />
+          </TouchableOpacity>
+        )}
         <Text selectable style={styles.mainText}>
           {`slot: ${response['resp']['slot']}`}
         </Text>
@@ -132,6 +134,26 @@ const StatusDetails = ({
         {response['resp']['master_pk'] && (
           <Text selectable style={styles.subText}>
             {`master pubkey: ${response['resp']['master_pk'].toString('hex')}`}
+          </Text>
+        )}
+      </View>
+    );
+  } else if (['address'].includes(command)) {
+    return (
+      <View style={styles.shadow}>
+        <QRCode value={response.addr} size={150} />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.textCopy}
+          onPress={() => Clipboard.setString(response.addr)}>
+          <Text numberOfLines={1} style={styles.address}>
+            {response.addr}
+          </Text>
+          <Copy />
+        </TouchableOpacity>
+        {response['pubkey'] && (
+          <Text selectable style={styles.subText}>
+            {`pubkey: ${response['pubkey'].toString('hex')}`}
           </Text>
         )}
       </View>

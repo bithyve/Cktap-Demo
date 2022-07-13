@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 
-import { CKTapCard } from 'coinkite-tap-protocol-js';
+import { CKTapCard } from 'cktap-protocol-react-native';
 import Card from '../components/Card';
 import InitiateCard from '../components/InitiateCard';
 import NfcPrompt from '../components/NfcPromptAndroid';
