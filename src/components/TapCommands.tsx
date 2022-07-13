@@ -26,7 +26,7 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
   const [visible, setVisible] = React.useState<boolean>(false);
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
-  const [callback, setCallback] = React.useState<string>();
+  const [callback, setCallback] = React.useState<string>('');
   const { cvc, setCvc } = useContext(AppContext);
 
   const cleanup = () => {
@@ -165,6 +165,7 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
         );
       })}
       <InputBox
+        command={callback}
         visible={visible}
         inputs={inputs}
         items={values}

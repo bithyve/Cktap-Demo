@@ -32,7 +32,6 @@ export const getMessageDigest = (message: string) => {
     const messageHash = sha256s(sha256s(message));
     return messageHash;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

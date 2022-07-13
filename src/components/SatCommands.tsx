@@ -19,12 +19,12 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
-  const [callback, setCallback] = React.useState<string>();
+  const [callback, setCallback] = React.useState<string>('');
   const { cvc, setCvc } = useContext(AppContext);
 
   const cleanup = () => {
     setInputs(new Map());
-    setCallback(undefined);
+    setCallback('');
   };
 
   const interact = (cmd = '') => {
@@ -155,6 +155,7 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         );
       })}
       <InputBox
+        command={callback}
         visible={visible}
         inputs={inputs}
         items={values}

@@ -45,7 +45,6 @@ const StatusDetails = ({
     return null;
   }
   const { command = '', error = null, response = null } = status;
-  console.log(command, response, error);
   if (error) {
     return <Text selectable style={styles.mainText}>{`${error}`}</Text>;
   }

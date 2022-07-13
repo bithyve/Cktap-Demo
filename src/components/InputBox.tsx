@@ -13,7 +13,9 @@ import { AppContext } from '../contexts/AppContext';
 
 const { height, width } = Dimensions.get('screen');
 
+const OPTIONAL_COMMANDS = ['faster', 'includePubkey'];
 const InputBox = ({
+  command,
   visible,
   setVisible,
   items,
@@ -21,6 +23,7 @@ const InputBox = ({
   setInputs,
   interact,
 }: {
+  command: string;
   visible: boolean;
   setVisible: any;
   items: string[];
@@ -53,7 +56,13 @@ const InputBox = ({
                 autoFocus={!!!index}
                 key={item}
                 style={styles.input}
-                placeholder={item}
+                placeholder={`${item} ${
+                  OPTIONAL_COMMANDS.includes(item) ||
+                  (command === 'slot-usage' && item === 'cvc') ||
+                  (command === 'address' && item === 'slot')
+                    ? '(optinal)'
+                    : ''
+                }`}
                 placeholderTextColor={'#ddd'}
                 onChangeText={value => {
                   const updated = inputs.set(item, value);
