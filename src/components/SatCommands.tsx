@@ -12,8 +12,6 @@ const COMMANDS = [
   'address',
   'unseal-slot',
   'get-privkey',
-  'change-cvc',
-  'verify-cvc',
   'wait',
   'Start Over',
 ];
@@ -30,50 +28,59 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const interact = (cmd = '') => {
-    switch (cmd ? cmd : callback) {
+    const name = cmd ? cmd : callback;
+    switch (name) {
       case 'setup-slot':
-        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true));
+        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true), name);
         cleanup();
         break;
       case 'sign':
-        withModal(() =>
-          card.sign_digest(inputs.get('cvc') || cvc, 0, inputs.get('digest'))
+        withModal(
+          () =>
+            card.sign_digest(inputs.get('cvc') || cvc, 0, inputs.get('digest')),
+          name
         );
         cleanup();
         break;
       case 'change-cvc':
-        withModal(() =>
-          card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+        withModal(
+          () => card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc')),
+          name
         );
         cleanup();
         break;
       case 'verify-cvc':
-        withModal(() => card.read(inputs.get('cvc') || cvc));
+        withModal(() => card.read(inputs.get('cvc') || cvc), name);
         cleanup();
         break;
       case 'slot-usage':
-        withModal(() =>
-          card.get_slot_usage(inputs.get('slot'), inputs.get('cvc') || cvc)
+        withModal(
+          () =>
+            card.get_slot_usage(inputs.get('slot'), inputs.get('cvc') || cvc),
+          name
         );
         cleanup();
         break;
       case 'unseal-slot':
-        withModal(() => card.unseal_slot(inputs.get('cvc') || cvc));
+        withModal(() => card.unseal_slot(inputs.get('cvc') || cvc), name);
         cleanup();
         break;
       case 'get-privkey':
-        withModal(() =>
-          card.get_privkey(inputs.get('cvc') || cvc, inputs.get('slot'))
+        withModal(
+          () => card.get_privkey(inputs.get('cvc') || cvc, inputs.get('slot')),
+          name
         );
         cleanup();
         break;
       case 'address':
-        withModal(() =>
-          card.address(
-            inputs.get('faster'),
-            inputs.get('includePubkey'),
-            inputs.get('slot')
-          )
+        withModal(
+          () =>
+            card.address(
+              inputs.get('faster'),
+              inputs.get('includePubkey'),
+              inputs.get('slot')
+            ),
+          name
         );
         cleanup();
         break;
@@ -83,7 +90,6 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const getInputs = (name: string, ins: string[]) => {
-    setCallback(name);
     ins = ins.filter(input => !(input === 'cvc' && cvc));
     if (!ins.length) {
       // passing name here as setCallback is async
@@ -95,12 +101,13 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const onPress = (name: string) => {
+    setCallback(name);
     switch (name) {
       case 'check-status':
-        withModal(() => card.first_look());
+        withModal(() => card.first_look(), name);
         break;
       case 'verify-certs':
-        withModal(() => card.certificate_check());
+        withModal(() => card.certificate_check(), name);
         break;
       case 'slot-usage':
         getInputs('slot-usage', ['slot', 'cvc']);
@@ -124,7 +131,7 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        withModal(() => card.wait());
+        withModal(() => card.wait(), name);
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);

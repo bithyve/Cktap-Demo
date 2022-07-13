@@ -47,10 +47,10 @@ const InputBox = ({
       onRequestClose={close}>
       <TouchableOpacity activeOpacity={1} style={styles.main} onPress={close}>
         <View style={styles.centeredView}>
-          {items.map(item => {
+          {items.map((item, index) => {
             return (
               <TextInput
-                autoFocus
+                autoFocus={!!!index}
                 key={item}
                 style={styles.input}
                 placeholder={item}
@@ -62,7 +62,9 @@ const InputBox = ({
                     setCvc(value);
                   }
                 }}
-                keyboardType={['cvc'].includes(item) ? 'numeric' : 'default'}
+                keyboardType={
+                  ['cvc', 'slot'].includes(item) ? 'numeric' : 'default'
+                }
               />
             );
           })}

@@ -8,7 +8,7 @@ const InitiateCard = ({ withModal, card, setTapsigner }: any) => {
       const selectedCard = await card.first_look();
       setTapsigner(selectedCard.is_tapsigner);
       return selectedCard;
-    });
+    }, 'check_status');
   return (
     <TouchableOpacity onPress={initiate} style={styles.container}>
       <Text style={styles.text}>GO</Text>

@@ -22,7 +22,8 @@ const INSTRUCTIONS = [
 
 const Instruction = ({ text, index }: { text: string; index: number }) => {
   return (
-    <View style={[styles.card, index % 2 == 0 ? styles.fs : styles.fe]}>
+    <View style={[styles.card]}>
+      <Text style={styles.ex}>{' ! '}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>
   );
@@ -38,7 +39,7 @@ const Instructions = () => {
         barStyle={'dark-content'}
         backgroundColor={theme.colors.background}
       />
-      <View>
+      <View style={styles.insContainer}>
         {INSTRUCTIONS.map((instruction, index) => {
           return (
             <Instruction text={instruction} key={instruction} index={index} />
@@ -60,22 +61,26 @@ const styles = StyleSheet.create({
     padding: '10%',
     justifyContent: 'space-between',
   },
+  insContainer: {
+    backgroundColor: 'rgba(242,236,221,1)',
+    borderRadius: 10,
+  },
   card: {
-    backgroundColor: 'rgba(230,230,230,1)',
     borderRadius: 10,
     width: '80%',
     padding: 10,
     marginVertical: 20,
-  },
-  fs: {
-    alignSelf: 'flex-start',
-  },
-  fe: {
-    alignSelf: 'flex-end',
+    flexDirection: 'row',
   },
   text: {
-    color: 'black',
+    color: 'rgb(70,76,82)',
     fontSize: 16,
+  },
+  ex: {
+    color: 'rgb(244,174,43)',
+    fontSize: 20,
+    fontWeight: '900',
+    margin: 10,
   },
   footer: {
     alignItems: 'center',

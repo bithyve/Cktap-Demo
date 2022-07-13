@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { getMessageDigest, sha256s } from '../utils.ts/cryptoUtils';
 
 import { AppContext } from '../contexts/AppContext';
 import InputBox from './InputBox';
@@ -12,6 +13,7 @@ const COMMANDS = [
   'get-derivation',
   'set-derivation',
   'master-xpub',
+  'XFP',
   'xpub',
   'sign',
   'create-backup',
@@ -33,49 +35,57 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const interact = (cmd = '') => {
-    switch (cmd ? cmd : callback) {
+    const name = cmd ? cmd : callback;
+    switch (name) {
       case 'pick-secret':
-        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true));
+        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true), name);
         cleanup();
         break;
       case 'set-derivation':
-        withModal(() =>
-          card.set_derivation(inputs.get('path'), inputs.get('cvc') || cvc)
+        withModal(
+          () =>
+            card.set_derivation(inputs.get('path'), inputs.get('cvc') || cvc),
+          name
         );
         cleanup();
         break;
       case 'master-xpub':
-        withModal(() => card.get_xfp(inputs.get('cvc') || cvc));
+        withModal(() => card.get_xpub(inputs.get('cvc') || cvc, true), name);
+        cleanup();
+        break;
+      case 'XFP':
+        withModal(() => card.get_xfp(inputs.get('cvc') || cvc), name);
         cleanup();
         break;
       case 'xpub':
-        withModal(() => card.get_xpub(inputs.get('cvc') || cvc, false));
+        withModal(() => card.get_xpub(inputs.get('cvc') || cvc, false), name);
         cleanup();
         break;
       case 'sign':
-        withModal(() =>
-          card.sign_digest(
-            inputs.get('cvc') || cvc,
-            0,
-            Buffer.from(
-              createHash('sha256').update(inputs.get('digest')).digest()
-            )
-          )
+        withModal(
+          () =>
+            card.sign_digest(
+              inputs.get('cvc') || cvc,
+              0,
+              getMessageDigest(inputs.get('digest'))
+            ),
+          name
         );
         cleanup();
         break;
       case 'create-backup':
-        withModal(() => card.make_backup(inputs.get('cvc') || cvc));
+        withModal(() => card.make_backup(inputs.get('cvc') || cvc), name);
         cleanup();
         break;
       case 'change-cvc':
-        withModal(() =>
-          card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc'))
+        withModal(
+          () => card.change_cvc(inputs.get('old_cvc'), inputs.get('new_cvc')),
+          name
         );
         cleanup();
         break;
       case 'verify-cvc':
-        withModal(() => card.read(inputs.get('cvc') || cvc));
+        withModal(() => card.read(inputs.get('cvc') || cvc), name);
         cleanup();
         break;
       default:
@@ -84,7 +94,6 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const getInputs = (name: string, ins: string[]) => {
-    setCallback(name);
     ins = ins.filter(input => !(input === 'cvc' && cvc));
     if (!ins.length) {
       // passing name here as setCallback is async
@@ -96,24 +105,28 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
   };
 
   const onPress = (name: string) => {
+    setCallback(name);
     switch (name) {
       case 'check-status':
-        withModal(() => card.first_look());
+        withModal(() => card.first_look(), name);
         break;
       case 'verify-certs':
-        withModal(() => card.certificate_check());
+        withModal(() => card.certificate_check(), name);
         break;
       case 'pick-secret':
         getInputs('pick-secret', ['cvc']);
         break;
       case 'get-derivation':
-        withModal(() => card.get_derivation());
+        withModal(() => card.get_derivation(), name);
         break;
       case 'set-derivation':
         getInputs('set-derivation', ['path', 'cvc']);
         break;
       case 'master-xpub':
         getInputs('master-xpub', ['cvc']);
+        break;
+      case 'XFP':
+        getInputs('XFP', ['cvc']);
         break;
       case 'xpub':
         getInputs('xpub', ['cvc']);
@@ -128,7 +141,7 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        withModal(() => card.wait());
+        withModal(() => card.wait(), name);
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);

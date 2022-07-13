@@ -20,13 +20,13 @@ const Demo = () => {
   const card = useRef(new CKTapCard()).current;
   const [prompt, setPrompt] = React.useState<boolean>(false);
 
-  const withModal = async (callback: any) => {
+  const withModal = async (callback: any, command: string) => {
     try {
       setPrompt(true);
       const resp = await card.nfcWrapper(callback);
       _setStatus(
         resp,
-        callback,
+        command,
         false,
         setStatus,
         isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
@@ -37,7 +37,7 @@ const Demo = () => {
       setPrompt(false);
       _setStatus(
         error.toString(),
-        callback,
+        command,
         true,
         setStatus,
         isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
