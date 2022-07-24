@@ -35,6 +35,10 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         withModal(() => card.setup(inputs.get('cvc') || cvc, null, true), name);
         cleanup();
         break;
+      case 'verify-certs':
+        withModal(() => card.certificate_check(inputs.get('pubkey')), name);
+        cleanup();
+        break;
       case 'sign':
         withModal(
           () =>
@@ -115,7 +119,7 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         withModal(() => card.first_look(), name);
         break;
       case 'verify-certs':
-        withModal(() => card.certificate_check(), name);
+        getInputs('verify-certs', ['pubkey']);
         break;
       case 'slot-usage':
         getInputs('slot-usage', ['slot', 'cvc']);

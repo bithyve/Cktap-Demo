@@ -60,7 +60,8 @@ const InputBox = ({
                   OPTIONAL_INPUT.includes(item) ||
                   (command === 'slot-usage' && item === 'cvc') ||
                   (command === 'address' && item === 'slot') ||
-                  command === 'get-pubkey'
+                  command === 'get-pubkey' ||
+                  command === 'verify-certs'
                     ? '(optinal)'
                     : ''
                 }`}

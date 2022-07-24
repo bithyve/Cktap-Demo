@@ -2863,7 +2863,7 @@ cjs-module-lexer@^0.6.0:
 
 "cktap-protocol-react-native@git+https://github.com/bithyve/cktap-protocol-react-native.git#main":
   version "0.0.1"
-  resolved "git+https://github.com/bithyve/cktap-protocol-react-native.git#fa4e0cc901163d122c83a60fbe1ed2f2b102b194"
+  resolved "git+https://github.com/bithyve/cktap-protocol-react-native.git#8491510e347bfbd8f7d478321327ffbe180a97a5"
   dependencies:
     "@ellipticoin/cbor" "^1.0.4"
     bech32 "^2.0.0"
