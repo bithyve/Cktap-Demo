@@ -6,12 +6,20 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
 import React from 'react';
+import nfcManager from 'react-native-nfc-manager';
 
-function NfcPrompt({ visible }: { visible: boolean }) {
+function NfcPrompt({
+  visible,
+  ignoreCommand,
+}: {
+  visible: boolean;
+  ignoreCommand: any;
+}) {
   if (Platform.OS === 'ios') {
     return null;
   }
@@ -54,6 +62,14 @@ function NfcPrompt({ visible }: { visible: boolean }) {
     ],
   };
 
+  const cancelNFC = async () => {
+    if (Platform.OS === 'ios') {
+      nfcManager.setAlertMessageIOS('Canceled!');
+    }
+    nfcManager.cancelTechnologyRequest();
+    ignoreCommand();
+  };
+
   return (
     <Modal transparent={true} visible={_visible}>
       <View style={[styles.wrapper]}>
@@ -66,8 +82,11 @@ function NfcPrompt({ visible }: { visible: boolean }) {
               style={{ width: 120, height: 120, padding: 20 }}
               resizeMode='contain'
             />
-            <Text>{'NFC scanning'}</Text>
+            <Text style={styles.text}>{'NFC scanning'}</Text>
           </View>
+          <TouchableOpacity style={styles.cancel} onPress={cancelNFC}>
+            <Text style={styles.text}>{'CANCEL'}</Text>
+          </TouchableOpacity>
         </Animated.View>
         <Animated.View style={[styles.promptBg, bgAnimStyle]} />
       </View>
@@ -98,6 +117,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 20,
     zIndex: 2,
+  },
+  text: {
+    color: 'black',
+    letterSpacing: 1,
+  },
+  cancel: {
+    backgroundColor: 'rgba(100,100,100,.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: '80%',
+    height: 35,
+    borderRadius: 5,
   },
 });
 

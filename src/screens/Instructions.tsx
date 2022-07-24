@@ -29,26 +29,38 @@ const Instruction = ({ text, index }: { text: string; index: number }) => {
   );
 };
 
+const Footer = () => {
+  return (
+    <View style={styles.footer}>
+      <Text style={[styles.openSourceText]}>Made by Hexa and ♥</Text>
+    </View>
+  );
+};
+
 const Instructions = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const onPress = () => navigation.dispatch(CommonActions.navigate('Demo'));
+
   return (
     <View style={styles.container}>
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={theme.colors.background}
       />
-      <View style={styles.insContainer}>
-        {INSTRUCTIONS.map((instruction, index) => {
-          return (
-            <Instruction text={instruction} key={instruction} index={index} />
-          );
-        })}
+      <View>
+        <View style={styles.insContainer}>
+          {INSTRUCTIONS.map((instruction, index) => {
+            return (
+              <Instruction text={instruction} key={instruction} index={index} />
+            );
+          })}
+        </View>
+        <TouchableOpacity style={styles.footer} onPress={onPress}>
+          <Proceed />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.footer} onPress={onPress}>
-        <Proceed />
-      </TouchableOpacity>
+      <Footer />
     </View>
   );
 };
@@ -84,5 +96,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
+    marginTop: '10%',
+  },
+  openSourceText: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    fontWeight: '700',
+    color: 'black',
   },
 });

@@ -4,6 +4,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 
@@ -14,11 +15,29 @@ import NfcPrompt from '../components/NfcPromptAndroid';
 import { _setStatus } from '../utils.ts/commandUtils';
 import { useTheme } from '@react-navigation/native';
 
+const Footer = () => {
+  return (
+    <View style={styles.footer}>
+      <Text style={[styles.openSourceText]}>Made by Hexa and ♥</Text>
+    </View>
+  );
+};
 const Demo = () => {
   const [isTapsigner, setTapsigner] = useState(null);
   const [status, setStatus] = useState<any>();
   const card = useRef(new CKTapCard()).current;
   const [prompt, setPrompt] = React.useState<boolean>(false);
+
+  const ignoreCommand = () => {
+    setPrompt(false);
+    _setStatus(
+      status.response,
+      'none',
+      false,
+      setStatus,
+      isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
+    );
+  };
 
   const withModal = async (callback: any, command: string) => {
     try {
@@ -34,6 +53,9 @@ const Demo = () => {
       setPrompt(false);
       return resp;
     } catch (error: any) {
+      if (error.toString() === 'Error') {
+        return;
+      }
       setPrompt(false);
       _setStatus(
         error.toString(),
@@ -91,7 +113,8 @@ const Demo = () => {
             </View>
           )}
         </ScrollView>
-        <NfcPrompt visible={prompt} />
+        <NfcPrompt visible={prompt} ignoreCommand={ignoreCommand} />
+        <Footer />
       </SafeAreaView>
     </>
   );
@@ -107,6 +130,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 5,
+  },
+  footer: {
+    alignItems: 'center',
+    marginBottom: '5%',
+  },
+  openSourceText: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    fontWeight: '700',
+    color: 'black',
   },
 });
