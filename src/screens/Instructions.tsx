@@ -18,9 +18,10 @@ const INSTRUCTIONS = [
   'The cards are sensitive. Please hold the card stably until the NFC modal is dismissed.',
   'The CVC is asked once when first required and stored for the current session. It is reset on Start Over.',
   'Please refer to the cktap library docs for detailed the error codes that is observed in the app.',
+  `Please keep the card in the vicinity of the mobile only when the NFC modal is active to avoid annoying system pop-ups.`,
 ];
 
-const Instruction = ({ text, index }: { text: string; index: number }) => {
+const Instruction = ({ text }: { text: string }) => {
   return (
     <View style={[styles.card]}>
       <Text style={styles.ex}>{' ! '}</Text>
@@ -50,10 +51,8 @@ const Instructions = () => {
       />
       <View>
         <View style={styles.insContainer}>
-          {INSTRUCTIONS.map((instruction, index) => {
-            return (
-              <Instruction text={instruction} key={instruction} index={index} />
-            );
+          {INSTRUCTIONS.map(instruction => {
+            return <Instruction text={instruction} key={instruction} />;
           })}
         </View>
         <TouchableOpacity style={styles.footer} onPress={onPress}>
