@@ -13,7 +13,7 @@ import { AppContext } from '../contexts/AppContext';
 
 const { height, width } = Dimensions.get('screen');
 
-const OPTIONAL_COMMANDS = ['faster', 'includePubkey'];
+const OPTIONAL_INPUT = ['faster', 'includePubkey'];
 const InputBox = ({
   command,
   visible,
@@ -57,9 +57,10 @@ const InputBox = ({
                 key={item}
                 style={styles.input}
                 placeholder={`${item} ${
-                  OPTIONAL_COMMANDS.includes(item) ||
+                  OPTIONAL_INPUT.includes(item) ||
                   (command === 'slot-usage' && item === 'cvc') ||
-                  (command === 'address' && item === 'slot')
+                  (command === 'address' && item === 'slot') ||
+                  command === 'get-pubkey'
                     ? '(optinal)'
                     : ''
                 }`}

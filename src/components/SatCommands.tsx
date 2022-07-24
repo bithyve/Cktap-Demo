@@ -10,6 +10,7 @@ const COMMANDS = [
   'slot-usage',
   'setup-slot',
   'address',
+  'get-pubkey',
   'unseal-slot',
   'get-privkey',
   'wait',
@@ -84,6 +85,13 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         );
         cleanup();
         break;
+      case 'get-pubkey':
+        withModal(
+          () => card.get_pubkey(inputs.get('cvc'), inputs.get('subpath')),
+          name
+        );
+        cleanup();
+        break;
       default:
         break;
     }
@@ -120,6 +128,9 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
         break;
       case 'address':
         getInputs('address', ['faster', 'includePubkey', 'slot']);
+        break;
+      case 'get-pubkey':
+        getInputs('get-pubkey', ['cvc', 'subpath']);
         break;
       case 'setup-slot':
         getInputs('setup-slot', ['cvc']);

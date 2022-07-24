@@ -70,6 +70,7 @@ const Demo = () => {
 
   const startOver = () => {
     setTapsigner(null);
+    initiate();
   };
 
   const initiate = () =>

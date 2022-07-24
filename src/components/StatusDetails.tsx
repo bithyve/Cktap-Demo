@@ -182,6 +182,32 @@ const StatusDetails = ({
         </Text>
       </View>
     );
+  } else if (command === 'get-pubkey') {
+    const pubkey = response.pubkey.toString('hex');
+    const address = response.addr.toString('hex');
+    return (
+      <View style={styles.shadow}>
+        <QRCode value={address} />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.textCopy}
+          onPress={() => Clipboard.setString(address)}>
+          <Text numberOfLines={1} style={styles.address}>
+            {address}
+          </Text>
+          <Copy />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.textCopy}
+          onPress={() => Clipboard.setString(pubkey)}>
+          <Text numberOfLines={1} style={styles.address}>
+            pubkey: {pubkey}
+          </Text>
+          <Copy />
+        </TouchableOpacity>
+      </View>
+    );
   } else {
     return (
       <View style={styles.shadow}>
