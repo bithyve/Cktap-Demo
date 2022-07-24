@@ -8,7 +8,7 @@ const Tapsigner = ({ withModal, card, status, startOver }: any) => {
     <>
       <Image
         source={require('../assets/tapsigner-mockup-oj.png')}
-        style={{ width: 571 / 1.5, height: 360 / 1.5 }}
+        style={{ width: 571 / 2.5, height: 360 / 2.5 }}
       />
       <StatusDetails status={status} />
       <TapCommands withModal={withModal} card={card} startOver={startOver} />

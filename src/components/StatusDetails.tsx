@@ -51,13 +51,18 @@ const StatusDetails = ({
   if (!response) {
     return null;
   }
-
   if (command === 'verify-certs') {
     return (
       <View style={styles.shadow}>
         <Text style={styles.mainText}>
           {`Verified. Root cert is from Coinkite. Card is legit!`}
         </Text>
+      </View>
+    );
+  } else if (command === 'change-cvc') {
+    return (
+      <View style={styles.shadow}>
+        <Text style={styles.mainText}>{`Successfully changed!`}</Text>
       </View>
     );
   } else if (['master-xpub', 'xpub'].includes(command)) {
@@ -157,6 +162,26 @@ const StatusDetails = ({
         )}
       </View>
     );
+  } else if (command === 'create-backup') {
+    const encryptedKey = response.toString('hex');
+    return (
+      <View style={styles.shadow}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.textCopy}
+          onPress={() => Clipboard.setString(encryptedKey)}>
+          <Text numberOfLines={1} style={styles.address}>
+            {encryptedKey}
+          </Text>
+          <Copy />
+        </TouchableOpacity>
+        <Text style={styles.mainText}>
+          {
+            'This is the AES encrypted hex value.\n\nPlease use the AES key behind the card to decrypt your key and back it up.'
+          }
+        </Text>
+      </View>
+    );
   } else {
     return (
       <View style={styles.shadow}>
@@ -175,7 +200,7 @@ const StatusDetails = ({
 
 const styles = StyleSheet.create({
   shadow: {
-    padding: 20,
+    padding: '5%',
     borderRadius: 10,
     flexDirection: 'column',
     flexWrap: 'wrap',
@@ -184,7 +209,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     shadowOpacity: 0.5,
     elevation: 8,
-    maxHeight: '40%',
+    maxHeight: '50%',
     width: width * 0.9,
     alignItems: 'center',
   },
@@ -203,11 +228,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#000',
+    letterSpacing: 1,
   },
   textWrap: {
     textAlign: 'center',
     paddingVertical: 5,
-    maxWidth: '50%',
+    maxWidth: '40%',
   },
   textCopy: {
     flexDirection: 'row',

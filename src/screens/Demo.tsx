@@ -31,7 +31,7 @@ const Demo = () => {
   const ignoreCommand = () => {
     setPrompt(false);
     _setStatus(
-      status.response,
+      status?.response ?? null,
       'none',
       false,
       setStatus,
