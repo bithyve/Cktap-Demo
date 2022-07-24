@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { CKTapCard } from 'cktap-protocol-react-native';
 import Card from '../components/Card';
@@ -71,18 +72,18 @@ const Demo = () => {
     setTapsigner(null);
   };
 
-  // const initiate = () =>
-  //   withModal(async () => {
-  //     const selectedCard = await card.first_look();
-  //     setTapsigner(selectedCard.is_tapsigner);
-  //     return selectedCard;
-  //   });
+  const initiate = () =>
+    withModal(async () => {
+      const selectedCard = await card.first_look();
+      setTapsigner(selectedCard.is_tapsigner);
+      return selectedCard;
+    }, 'check-status');
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     initiate();
-  //   }, 1000);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      initiate();
+    }, 1000);
+  }, []);
 
   const theme = useTheme();
   return (
@@ -96,11 +97,11 @@ const Demo = () => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps={'always'}>
           {isTapsigner === null ? (
-            <InitiateCard
-              card={card}
-              withModal={withModal}
-              setTapsigner={setTapsigner}
-            />
+            <View style={styles.container}>
+              <Text style={styles.text}>
+                Waiting for a card to be scanned...
+              </Text>
+            </View>
           ) : (
             <View style={styles.container}>
               <Card
@@ -142,5 +143,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontWeight: '700',
     color: 'black',
+  },
+  text: {
+    color: 'black',
+    fontSize: 18,
+    letterSpacing: 1,
   },
 });
