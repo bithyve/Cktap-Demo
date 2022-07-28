@@ -71,11 +71,14 @@ const SatCommands = ({
         cleanup();
         break;
       case 'slot-usage':
-        withModal(
-          () =>
-            card.get_slot_usage(inputs.get('slot'), inputs.get('cvc') || cvc),
-          name
-        );
+        withModal(async () => {
+          const slots = [];
+          for (let i = 0; i < 10; i++) {
+            const slot = await card.get_slot_usage(i, inputs.get('cvc') || cvc);
+            slots.push(slot);
+          }
+          return slots;
+        }, name);
         cleanup();
         break;
       case 'unseal-slot':
@@ -134,7 +137,7 @@ const SatCommands = ({
         getInputs('verify-certs', ['pubkey']);
         break;
       case 'slot-usage':
-        getInputs('slot-usage', ['slot', 'cvc']);
+        getInputs('slot-usage', ['cvc']);
         break;
       case 'unseal-slot':
         getInputs('unseal-slot', ['cvc']);
