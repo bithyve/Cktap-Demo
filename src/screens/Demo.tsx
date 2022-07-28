@@ -24,7 +24,7 @@ const Footer = () => {
   );
 };
 const Demo = () => {
-  const [isTapsigner, setTapsigner] = useState(null);
+  const [isTapsigner, setTapsigner] = useState<boolean | null>(null);
   const [status, setStatus] = useState<any>();
   const card = useRef(new CKTapCard()).current;
   const [prompt, setPrompt] = React.useState<boolean>(false);
@@ -76,7 +76,7 @@ const Demo = () => {
   const initiate = () =>
     withModal(async () => {
       const selectedCard = await card.first_look();
-      setTapsigner(selectedCard.is_tapsigner);
+      setTapsigner(selectedCard!.is_tapsigner);
       return selectedCard;
     }, 'check-status');
 

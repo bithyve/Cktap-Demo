@@ -6,31 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import React, { Fragment } from 'react';
 
 import Copy from '../assets/copy.svg';
 import QRCode from 'react-native-qrcode-svg';
-import React from 'react';
 
 const { width } = Dimensions.get('window');
 
-const ignoreKeys = ['card_nonce', 'card_pubkey', 'pubkey'];
+const keysToIgnore = (isTapsigner: boolean) => {
+  return isTapsigner
+    ? ['card_nonce', 'card_pubkey', 'pubkey']
+    : ['card_nonce', 'card_pubkey', 'pubkey', 'num_backups'];
+};
+
 const ObjectRepr = ({ obj }: any) => {
+  const isObject = (key: string) => typeof obj[key] === 'object' && obj[key];
   return Object.keys(obj).map((key: string) => {
-    if (ignoreKeys.includes(key)) {
-      return null;
+    if (keysToIgnore(obj.is_tapsigner).includes(key)) {
+      return <Fragment key={key} />;
     }
     return (
       <Text style={styles.textWrap} key={key}>
         <Text style={styles.subText}>{`${key}\n`}</Text>
-        {typeof obj[key] === 'object' && obj[key] !== null ? (
+        {isObject(key) ? (
           <ObjectRepr obj={obj[key]} />
         ) : (
-          <>
-            <Text style={styles.mainText} selectable>{`${obj[key]}\n`}</Text>
-            {['addr', 'address'].includes(key) ? (
-              <QRCode value={obj[key]} />
-            ) : null}
-          </>
+          <Text style={styles.mainText} selectable>{`${obj[key]}\n`}</Text>
         )}
       </Text>
     );
@@ -42,14 +43,14 @@ const StatusDetails = ({
   status: { type: string; command: string; error: any; response: any };
 }) => {
   if (!status) {
-    return null;
+    return <Fragment />;
   }
   const { command = '', error = null, response = null } = status;
   if (error) {
     return <Text selectable style={styles.mainText}>{`${error}`}</Text>;
   }
   if (!response) {
-    return null;
+    return <Fragment />;
   }
   if (command === 'verify-certs') {
     return (

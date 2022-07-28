@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { getMessageDigest, sha256s } from '../utils.ts/cryptoUtils';
 
 import { AppContext } from '../contexts/AppContext';
+import { CKTapCard } from 'cktap-protocol-react-native';
 import InputBox from './InputBox';
-import { createHash } from 'crypto';
+import { getMessageDigest } from '../utils.ts/cryptoUtils';
 
 const COMMANDS = [
   'check-status',
@@ -15,14 +15,21 @@ const COMMANDS = [
   'master-xpub',
   'XFP',
   'xpub',
-  'sign',
   'create-backup',
   'change-cvc',
   'verify-cvc',
   'wait',
   'Start Over',
 ];
-const TapCommands = ({ withModal, card, startOver }: any) => {
+const TapCommands = ({
+  withModal,
+  card,
+  startOver,
+}: {
+  withModal: any;
+  card: CKTapCard;
+  startOver: any;
+}) => {
   const [visible, setVisible] = React.useState<boolean>(false);
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -38,7 +45,10 @@ const TapCommands = ({ withModal, card, startOver }: any) => {
     const name = cmd ? cmd : callback;
     switch (name) {
       case 'pick-secret':
-        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true), name);
+        withModal(
+          () => card.setup(inputs.get('cvc') || cvc, undefined, true),
+          name
+        );
         cleanup();
         break;
       case 'set-derivation':

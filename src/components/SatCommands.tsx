@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AppContext } from '../contexts/AppContext';
+import { CKTapCard } from 'cktap-protocol-react-native';
 import InputBox from './InputBox';
 
 const COMMANDS = [
@@ -16,7 +17,15 @@ const COMMANDS = [
   'wait',
   'Start Over',
 ];
-const SatCommands = ({ withModal, card, startOver }: any) => {
+const SatCommands = ({
+  withModal,
+  card,
+  startOver,
+}: {
+  withModal: any;
+  card: CKTapCard;
+  startOver: any;
+}) => {
   const [visible, setVisible] = React.useState(false);
   const [inputs, setInputs] = React.useState(new Map());
   const [values, setValues] = React.useState<string[]>([]);
@@ -32,7 +41,10 @@ const SatCommands = ({ withModal, card, startOver }: any) => {
     const name = cmd ? cmd : callback;
     switch (name) {
       case 'setup-slot':
-        withModal(() => card.setup(inputs.get('cvc') || cvc, null, true), name);
+        withModal(
+          () => card.setup(inputs.get('cvc') || cvc, undefined, true),
+          name
+        );
         cleanup();
         break;
       case 'verify-certs':
