@@ -37,6 +37,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CKTap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CKTap/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-CKTap-CKTapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CKTap-CKTapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA23F152893EEDF0095BB21 /* CKTap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CKTap.entitlements; path = CKTap/CKTap.entitlements; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-CKTap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CKTap.debug.xcconfig"; path = "Target Support Files/Pods-CKTap/Pods-CKTap.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-CKTap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CKTap.release.xcconfig"; path = "Target Support Files/Pods-CKTap/Pods-CKTap.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-CKTap-CKTapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CKTap-CKTapTests.debug.xcconfig"; path = "Target Support Files/Pods-CKTap-CKTapTests/Pods-CKTap-CKTapTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* CKTap */ = {
 			isa = PBXGroup;
 			children = (
+				1FA23F152893EEDF0095BB21 /* CKTap.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -447,6 +449,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CKTap/CKTap.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y5TCB759QL;
 				ENABLE_BITCODE = NO;
@@ -475,6 +478,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CKTap/CKTap.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y5TCB759QL;
 				INFOPLIST_FILE = CKTap/Info.plist;
