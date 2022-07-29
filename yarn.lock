@@ -2861,9 +2861,9 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
-"cktap-protocol-react-native@git+https://github.com/bithyve/cktap-protocol-react-native.git#typescript-support":
+"cktap-protocol-react-native@git+https://github.com/bithyve/cktap-protocol-react-native.git#main":
   version "0.0.1"
-  resolved "git+https://github.com/bithyve/cktap-protocol-react-native.git#38bcf964bf857d0e8462bbcc4aca37439ffc667f"
+  resolved "git+https://github.com/bithyve/cktap-protocol-react-native.git#6c6029589d25599b9d3cf0f0f40a7e5eb4560107"
   dependencies:
     "@ellipticoin/cbor" "^1.0.4"
     bech32 "^2.0.0"
