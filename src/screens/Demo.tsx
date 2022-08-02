@@ -69,6 +69,13 @@ const Demo = () => {
   };
 
   const startOver = () => {
+    _setStatus(
+      null,
+      '',
+      false,
+      setStatus,
+      isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
+    );
     setTapsigner(null);
     initiate();
   };

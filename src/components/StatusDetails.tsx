@@ -18,7 +18,7 @@ const { width } = Dimensions.get('window');
 const keysToIgnore = (isTapsigner: boolean) => {
   return isTapsigner
     ? ['card_nonce', 'card_pubkey', 'pubkey']
-    : ['card_nonce', 'card_pubkey', 'pubkey', 'num_backups'];
+    : ['card_nonce', 'card_pubkey', 'pubkey', 'num_backups', 'path'];
 };
 
 const ObjectRepr = ({ obj }: any) => {
@@ -241,6 +241,26 @@ const StatusDetails = ({
           </Text>
           <Copy />
         </TouchableOpacity>
+      </View>
+    );
+  } else if (command === 'unseal-slot') {
+    const { pk, target } = response;
+    const key = pk.toString('hex');
+    return (
+      <View style={styles.shadow}>
+        <QRCode value={key} />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.textCopy}
+          onPress={() => Clipboard.setString(key)}>
+          <Text numberOfLines={1} style={styles.address}>
+            {key}
+          </Text>
+          <Copy />
+        </TouchableOpacity>
+        <Text style={styles.mainText}>
+          {`Slot ${target} has been unsealed. You can sweep your funds of slot ${target} with this key.`}
+        </Text>
       </View>
     );
   } else {
