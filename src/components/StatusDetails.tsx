@@ -12,6 +12,7 @@ import React, { Fragment } from 'react';
 
 import Copy from '../assets/copy.svg';
 import QRCode from 'react-native-qrcode-svg';
+import wif from 'wif';
 
 const { width } = Dimensions.get('window');
 
@@ -68,16 +69,20 @@ const StatusDetails = ({
         <Text style={styles.mainText}>{`Successfully changed!`}</Text>
       </View>
     );
-  } else if (['master-xpub', 'xpub'].includes(command)) {
+  } else if (['master-xpub', 'xpub', 'get-privkey'].includes(command)) {
+    let data = response;
+    if (command === 'get-privkey') {
+      data = wif.encode(128, response, false);
+    }
     return (
       <View style={styles.shadow}>
-        <QRCode value={response} size={150} />
+        <QRCode value={data} size={150} />
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.textCopy}
-          onPress={() => Clipboard.setString(response)}>
+          onPress={() => Clipboard.setString(data)}>
           <Text numberOfLines={1} style={styles.address}>
-            {response}
+            {data}
           </Text>
           <Copy />
         </TouchableOpacity>
@@ -91,11 +96,12 @@ const StatusDetails = ({
         </Text>
       </View>
     );
-  } else if (['sign', 'get-privkey'].includes(command)) {
+  } else if (['sign'].includes(command)) {
+    let data = response.toString('hex');
     return (
       <View style={styles.shadow}>
         <Text selectable style={styles.mainText}>
-          {response.toString('hex')}
+          {data}
         </Text>
       </View>
     );
@@ -114,7 +120,7 @@ const StatusDetails = ({
         keyExtractor={(item, index) => index.toString()}
         horizontal
         style={{
-          maxHeight: '55%',
+          maxHeight: '70%',
         }}
         contentContainerStyle={{ padding: '5%' }}
         snapToInterval={Dimensions.get('window').width * 0.9}
@@ -143,7 +149,11 @@ const StatusDetails = ({
               </Text>
               {slot['resp']['privkey'] && (
                 <Text selectable style={styles.mainText}>
-                  {`privkey: ${slot['resp']['privkey'].toString('hex')}`}
+                  {`privkey (wif): ${wif.encode(
+                    128,
+                    slot['resp']['privkey'],
+                    false
+                  )}`}
                 </Text>
               )}
               {slot['resp']['pubkey'] && (
@@ -245,21 +255,21 @@ const StatusDetails = ({
     );
   } else if (command === 'unseal-slot') {
     const { pk, target } = response;
-    const key = pk.toString('hex');
+    const walletImportFormat = wif.encode(128, pk, false);
     return (
       <View style={styles.shadow}>
-        <QRCode value={key} />
+        <QRCode value={walletImportFormat} />
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.textCopy}
-          onPress={() => Clipboard.setString(key)}>
+          onPress={() => Clipboard.setString(walletImportFormat)}>
           <Text numberOfLines={1} style={styles.address}>
-            {key}
+            {walletImportFormat}
           </Text>
           <Copy />
         </TouchableOpacity>
         <Text style={styles.mainText}>
-          {`Slot ${target} has been unsealed. You can sweep your funds of slot ${target} with this key.`}
+          {`Slot ${target} has been unsealed. You can sweep your funds of slot ${target} with this key (wif).`}
         </Text>
       </View>
     );

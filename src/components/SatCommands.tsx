@@ -87,7 +87,11 @@ const SatCommands = ({
         break;
       case 'get-privkey':
         withModal(
-          () => card.get_privkey(inputs.get('cvc') || cvc, inputs.get('slot')),
+          () =>
+            card.get_privkey(
+              inputs.get('cvc') || cvc,
+              Number(inputs.get('slot'))
+            ),
           name
         );
         cleanup();
@@ -98,7 +102,7 @@ const SatCommands = ({
             card.address(
               inputs.get('faster'),
               inputs.get('includePubkey'),
-              inputs.get('slot')
+              Number(inputs.get('slot'))
             ),
           name
         );
