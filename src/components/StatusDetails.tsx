@@ -1,6 +1,8 @@
 import {
   Clipboard,
   Dimensions,
+  FlatList,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -107,41 +109,73 @@ const StatusDetails = ({
     );
   } else if (['slot-usage'].includes(command)) {
     return (
-      <View style={[styles.shadow, { maxHeight: '90%' }]}>
-        {response.address && <QRCode value={response.address} size={100} />}
-        {response.address && (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.textCopy}
-            onPress={() => Clipboard.setString(response.address)}>
-            <Text numberOfLines={1} style={styles.address}>
-              {response.address}
-            </Text>
-            <Copy />
-          </TouchableOpacity>
-        )}
-        <Text selectable style={styles.mainText}>
-          {`slot: ${response['resp']['slot']}`}
-        </Text>
-        <Text selectable style={styles.mainText}>
-          {`status: ${response['status']}`}
-        </Text>
-        {response['resp']['privkey'] && (
-          <Text selectable style={styles.mainText}>
-            {`privkey: ${response['resp']['privkey'].toString('hex')}`}
-          </Text>
-        )}
-        {response['resp']['pubkey'] && (
-          <Text selectable style={styles.subText}>
-            {`pubkey: ${response['resp']['pubkey'].toString('hex')}`}
-          </Text>
-        )}
-        {response['resp']['master_pk'] && (
-          <Text selectable style={styles.subText}>
-            {`master pubkey: ${response['resp']['master_pk'].toString('hex')}`}
-          </Text>
-        )}
-      </View>
+      <FlatList
+        data={response}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+        style={{
+          maxHeight: '55%',
+        }}
+        contentContainerStyle={{ padding: '5%' }}
+        snapToInterval={Dimensions.get('window').width * 0.9}
+        snapToAlignment={'center'}
+        scrollToOverflowEnabled
+        renderItem={({ item: slot }) => {
+          return (
+            <View style={styles.slots}>
+              {slot.address && <QRCode value={slot.address} size={100} />}
+              {slot.address && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.textCopy}
+                  onPress={() => Clipboard.setString(slot.address)}>
+                  <Text numberOfLines={1} style={styles.address}>
+                    {slot.address}
+                  </Text>
+                  <Copy />
+                </TouchableOpacity>
+              )}
+              <Text selectable style={styles.mainText}>
+                {`slot: ${slot['resp']['slot']}`}
+              </Text>
+              <Text selectable style={styles.mainText}>
+                {`status: ${slot['status']}`}
+              </Text>
+              {slot['resp']['privkey'] && (
+                <Text selectable style={styles.mainText}>
+                  {`privkey: ${slot['resp']['privkey'].toString('hex')}`}
+                </Text>
+              )}
+              {slot['resp']['pubkey'] && (
+                <Text selectable style={styles.subText}>
+                  {`pubkey: ${slot['resp']['pubkey'].toString('hex')}`}
+                </Text>
+              )}
+              {slot['resp']['master_pk'] && (
+                <Text selectable style={styles.subText}>
+                  {`master pubkey: ${slot['resp']['master_pk'].toString(
+                    'hex'
+                  )}`}
+                </Text>
+              )}
+              {slot.address && slot.status === 'UNSEALED' && (
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(
+                      `https://www.blockchain.com/btc/address/${slot.address}`
+                    );
+                  }}>
+                  <Text
+                    selectable
+                    style={[styles.mainText, { color: '#FF3300' }]}>
+                    {`Balance ->`}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          );
+        }}
+      />
     );
   } else if (['address'].includes(command)) {
     return (
@@ -239,6 +273,17 @@ const styles = StyleSheet.create({
     maxHeight: '50%',
     width: width * 0.9,
     alignItems: 'center',
+  },
+  slots: {
+    padding: '5%',
+    borderRadius: 20,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    width: width * 0.9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    elevation: 8,
   },
   button: {
     backgroundColor: 'rgba(0,0,0,.5)',
