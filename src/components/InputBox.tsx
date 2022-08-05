@@ -65,7 +65,7 @@ const InputBox = ({
                     ? '(optinal)'
                     : ''
                 }`}
-                placeholderTextColor={'#ddd'}
+                placeholderTextColor={'#aaa'}
                 onChangeText={value => {
                   const updated = inputs.set(item, value);
                   setInputs(updated);
@@ -79,8 +79,8 @@ const InputBox = ({
               />
             );
           })}
-          <TouchableOpacity style={styles.button} onPress={done}>
-            <Text style={styles.done}>Done</Text>
+          <TouchableOpacity onPress={done}>
+            <Text style={styles.done}>DONE</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -98,10 +98,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.5)',
   },
   centeredView: {
-    height: height * 0.25,
-    width,
+    padding: 10,
+    paddingVertical: 30,
+    width: width * 0.9,
     backgroundColor: 'rgba(240,240,240,1)',
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -132,18 +133,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     color: '#000',
-    fontSize: 14,
+    fontSize: 16,
     paddingHorizontal: 10,
-    marginVertical: 5,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#000',
   },
   done: {
-    color: '#000',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  button: {
-    backgroundColor: '#FFF',
+    color: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: '#000',
     borderRadius: 10,
-    margin: 5,
+    letterSpacing: 2,
+    marginTop: 5,
   },
 });
