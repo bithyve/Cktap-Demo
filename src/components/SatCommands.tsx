@@ -102,7 +102,9 @@ const SatCommands = ({
             card.address(
               inputs.get('faster'),
               inputs.get('includePubkey'),
-              Number(inputs.get('slot'))
+              inputs.get('slot')
+                ? Number(inputs.get('slot'))
+                : inputs.get('slot')
             ),
           name
         );
