@@ -1,5 +1,5 @@
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -7,11 +7,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
 
 import { CKTapCard } from 'cktap-protocol-react-native';
 import Card from '../components/Card';
-import InitiateCard from '../components/InitiateCard';
 import NfcPrompt from '../components/NfcPromptAndroid';
 import { _setStatus } from '../utils.ts/commandUtils';
 import { useTheme } from '@react-navigation/native';
@@ -42,7 +40,6 @@ const Demo = () => {
 
   const withModal = async (callback: any, command: string) => {
     try {
-      setPrompt(true);
       const resp = await card.nfcWrapper(callback);
       _setStatus(
         resp,
@@ -51,13 +48,11 @@ const Demo = () => {
         setStatus,
         isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
       );
-      setPrompt(false);
       return resp;
     } catch (error: any) {
       if (error.toString() === 'Error') {
         return;
       }
-      setPrompt(false);
       _setStatus(
         error.toString(),
         command,
@@ -68,7 +63,7 @@ const Demo = () => {
     }
   };
 
-  const startOver = () => {
+  const startOver = async () => {
     _setStatus(
       null,
       '',
@@ -77,15 +72,19 @@ const Demo = () => {
       isTapsigner ? 'TAPSIGNER' : 'SATSCARD'
     );
     setTapsigner(null);
+    await card.endNfcSession();
     initiate();
   };
 
-  const initiate = () =>
-    withModal(async () => {
+  const initiate = async () => {
+    setPrompt(true);
+    await withModal(async () => {
       const selectedCard = await card.first_look();
       setTapsigner(selectedCard!.is_tapsigner);
       return selectedCard;
     }, 'check-status');
+    setPrompt(false);
+  };
 
   useEffect(() => {
     setTimeout(() => {

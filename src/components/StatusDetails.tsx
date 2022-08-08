@@ -50,6 +50,31 @@ const StatusDetails = ({
   }
   const { command = '', error = null, response = null } = status;
   if (error) {
+    if (error === 'Error: transceive fail') {
+      return (
+        <View style={styles.shadow}>
+          <Text selectable style={styles.mainText}>{`NFC signal lost.`}</Text>
+          <Text
+            selectable
+            style={[
+              styles.subText,
+              { textAlign: 'center' },
+            ]}>{`You might have lost the NFC signal from the cards. Please START OVER!`}</Text>
+        </View>
+      );
+    } else if (error.includes('rate limited')) {
+      return (
+        <View style={styles.shadow}>
+          <Text selectable style={styles.mainText}>{`Card Locked!`}</Text>
+          <Text
+            selectable
+            style={[
+              styles.subText,
+              { textAlign: 'center' },
+            ]}>{`Please use the WAIT command, which will take approx. 15 seconds, to unlock the card and then retry with the conrrect CVC.`}</Text>
+        </View>
+      );
+    }
     return <Text selectable style={styles.mainText}>{`${error}`}</Text>;
   }
   if (!response) {

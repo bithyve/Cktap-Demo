@@ -1,5 +1,11 @@
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AppContext } from '../contexts/AppContext';
 import { CKTapCard } from 'cktap-protocol-react-native';
@@ -34,6 +40,7 @@ const TapCommands = ({
   const [inputs, setInputs] = React.useState<Map<any, any>>(new Map());
   const [values, setValues] = React.useState<string[]>([]);
   const [callback, setCallback] = React.useState<string>('');
+  const [unlocking, setUnlocking] = React.useState<boolean>(false);
   const { cvc, setCvc } = useContext(AppContext);
 
   const cleanup = () => {
@@ -151,7 +158,18 @@ const TapCommands = ({
         getInputs('change-cvc', ['old_cvc', 'new_cvc']);
         break;
       case 'wait':
-        withModal(() => card.wait(), name);
+        withModal(async () => {
+          const status = await card.first_look();
+          if (status.auth_delay) {
+            setUnlocking(true);
+            setCvc('');
+            for (let i = 0; i < status.auth_delay; i++) {
+              await card.wait();
+            }
+            setUnlocking(false);
+            return card.first_look();
+          } else return status;
+        }, name);
         break;
       case 'verify-cvc':
         getInputs('verify-cvc', ['cvc']);
@@ -164,6 +182,10 @@ const TapCommands = ({
         break;
     }
   };
+
+  if (unlocking) {
+    return <ActivityIndicator color={'#000'} />;
+  }
   return (
     <View style={styles.container}>
       {COMMANDS.map((name: any) => {
