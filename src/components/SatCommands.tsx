@@ -54,10 +54,6 @@ const SatCommands = ({
         );
         cleanup();
         break;
-      case 'verify-certs':
-        withModal(() => card.certificate_check(inputs.get('pubkey')), name);
-        cleanup();
-        break;
       case 'sign':
         withModal(
           () =>
@@ -147,7 +143,14 @@ const SatCommands = ({
         withModal(() => card.first_look(), name);
         break;
       case 'verify-certs':
-        getInputs('verify-certs', ['pubkey']);
+        withModal(async () => {
+          if (card.applet_version !== '0.9.0') {
+            const { pubkey } = await card.get_pubkey();
+            return card.certificate_check(pubkey);
+          } else {
+            return card.certificate_check();
+          }
+        }, name);
         break;
       case 'slot-usage':
         getInputs('slot-usage', ['cvc']);
