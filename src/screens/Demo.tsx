@@ -17,7 +17,7 @@ import { useTheme } from '@react-navigation/native';
 const Footer = () => {
   return (
     <View style={styles.footer}>
-      <Text style={[styles.openSourceText]}>Made by Hexa and ♥</Text>
+      <Text style={[styles.openSourceText]}>Made by Hexa with ♥</Text>
     </View>
   );
 };
